@@ -12,11 +12,12 @@
 Energy requirement to be able to start a cycle and cast the first TP
  ]]
 local FIGHT_LENGHT = 300 -- used for BL
-local ACTUAL_LENGTH_PERCENT = (FIGHT_LENGHT - 40) / FIGHT_LENGHT -- actual fight without BL
+local RELEVANT_FIGHT_LENGTH = (FIGHT_LENGHT - 40) / FIGHT_LENGHT -- starvation during BL doesn't occur, haste is worthless during BL
 local BOB_CD = 90
 local EK_CD = 75
 local BASE_REGEN = 10
 local KS_COST = 40
+local TP_COST = 25
 
 function calculate_haste_3tp(haste)
     local fp_ranks = 4 -- #TODO grab actual ranks
@@ -34,13 +35,15 @@ function calculate_starvation(haste, energy_out, duration, bob_cd)
     local energy = 100 -- #TODO add support for racial/arcway neck
     local energy_in = energy_regen * duration
     local energy_diff = energy_out - energy_in
-    local seconds = 0
-    for i = 1, 10, 1 do -- redo this properly at some point
+    local energy_def = 0
+    local ek_adjust = bob_cd / EK_CD -- EK on cd for max dps, filling a gcd with EK gives time to regen energy. For average downtime calculation, use average EK cast
+    for i = 0, bob_cd, duration do -- redo this properly at some point
         energy = energy - energy_diff
-        seconds = seconds + duration
-        if energy < 40 then
-            break;
+        if energy < KS_COST then
+            energy_def = KS_COST - energy
+            energy_def = TP_COST - 2 * energy_regen + energy_def -- TP energy requirement
+            break
         end
     end
-
+    local average_downtime = energy_def / energy_regen - ek_adjust
 end
