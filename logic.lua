@@ -77,7 +77,7 @@ function calculate_gear_delta(equipped_item,new_item)
 end
 
 function calculate_stat_score(stats)
-    local haste = calculate_haste_value(stats['haste'])
+    local haste = calc_haste_val_3tp(stats['haste'])
     return stats['agi'] * (1 + stats['mastery'] / 100) * (1 + stats['crit'] / 100) * (1 + stats['vers'] / 100) * haste
 end
 
