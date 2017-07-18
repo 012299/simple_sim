@@ -1,0 +1,8 @@
+## Interface: 70200
+## Title: SimpleWeights
+## Author: Original Retard
+## Version: 0.1
+## OptionalDeps: LibArtifactData-1.0
+main.lua
+logic.lua
+utils.lua
