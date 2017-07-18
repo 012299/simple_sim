@@ -81,7 +81,3 @@ function calculate_stat_score(stats)
     return stats['agi'] * (1 + stats['mastery'] / 100) * (1 + stats['crit'] / 100) * (1 + stats['vers'] / 100) * haste
 end
 
--- Currently 3tp only
-function calculate_haste_value(haste)
-
-end

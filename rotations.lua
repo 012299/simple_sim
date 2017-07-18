@@ -34,18 +34,16 @@ end
 function calculate_downtime(haste, energy_out, duration, bob_cd)
     local haste_perc = haste / 375
     local energy_regen = BASE_REGEN * (1 + haste_perc / 100)
-    local energy = 100 -- #TODO add support for racial/arcway neck
+    local energy = UnitPowerMax("player")
     local energy_in = energy_regen * duration
     local energy_diff = energy_out - energy_in
     local energy_def = 0
-    local starvation_cut_off = 0
     local ek_adjust = bob_cd / EK_CD -- EK on cd for max dps, filling a gcd with EK gives time to regen energy. For average downtime calculation, use average EK cast
-    for i = 0, bob_cd, duration do -- redo this properly at some point
+    for i = duration, bob_cd, duration do -- redo this properly at some point
         energy = energy - energy_diff
         if energy < KS_COST then
             energy_def = KS_COST - energy
             energy_def = TP_COST - 2 * energy_regen + energy_def -- TP energy requirement
-            starvation_cut_off = i
         end
     end
     local downtime = (energy_def / energy_regen - ek_adjust) / (bob_cd + ek_adjust) * RELEVANT_FIGHT_LENGTH
