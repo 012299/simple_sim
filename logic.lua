@@ -33,7 +33,6 @@ function cache_equipped_ratings()
 end
 
 function CalculateConcVers()
-
     local traits = select(2, LAD:GetArtifactTraits())
     local conc_rank = 0
     local base_vers = 0

@@ -26,7 +26,7 @@ function calc_haste_val_3tp(haste)
     local energy_out = 115
     local brew_reduction_cycle = 4.8 + 3 + (3 * .1 * fp_ranks) + rotation_duration -- 3 tps, 1 KS
     local brew_gen_sec = brew_reduction_cycle / rotation_duration
-    local bob_cd = BOB_CD / brew_gen_sec - 6 -- There's no starvation on base energy regen for the last 6 casts in the cycle, haste does nothing for us at this point
+    local bob_cd = math.floor(BOB_CD / brew_gen_sec)/duration*duration +3 --Energy starvation only occurs during the first 3 casts (ks/tp) of a cycle if that cycle has to be started without BoB up
     return calculate_downtime(haste, energy_out, rotation_duration, bob_cd)
 end
 
