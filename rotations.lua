@@ -11,6 +11,8 @@
 4.8 sec KS reduction (recursive stave off not reliable enough for average brew reduction)
 Energy requirement to be able to start a cycle and cast the first TP
  ]]
+local name, SimpleSim = ...;
+
 local FIGHT_LENGHT = 300 -- used for BL
 local RELEVANT_FIGHT_LENGTH = (FIGHT_LENGHT - 40) / FIGHT_LENGHT -- starvation during BL doesn't occur, haste is worthless during BL
 local BOB_CD = 90
@@ -18,10 +20,9 @@ local EK_CD = 75
 local BASE_REGEN = 10
 local KS_COST = 40
 local TP_COST = 25
-local ENERGY_PER_HASTE_POINT = .01 / 375 * 10 --Energy regen granted by a single point of haste
 
 function calc_haste_val_3tp(haste)
-    local fp_ranks = 4 -- #TODO grab actual ranks
+    local fp_ranks = SimpleSim.CACHED_TRAITS[SimpleSim.FACE_PALM_ID] -- #TODO grab actual ranks
     local rotation_duration = 9
     local energy_out = 115
     local brew_reduction_cycle = 4.8 + 3 + (3 * .1 * fp_ranks) + rotation_duration -- 3 tps, 1 KS
@@ -46,7 +47,7 @@ function calculate_downtime(haste, energy_out, duration, bob_cd)
             energy_def = TP_COST - 2 * energy_regen + energy_def -- TP energy requirement
         end
     end
-    local downtime = (energy_def / energy_regen - ek_adjust) / (bob_cd + ek_adjust) * RELEVANT_FIGHT_LENGTH
+    local downtime = (energy_def / energy_regen - ek_adjust) / (bob_cd) * RELEVANT_FIGHT_LENGTH
     if downtime < 0 then
         return 1
     end
@@ -58,3 +59,4 @@ end
 
 
 --    local energy_requirement_points = math.abs((energy_def/starvation_cut_off)/ENERGY_PER_HASTE_POINT) --For later, when using weights etcRequired energy/second, energy regen needs to go up over the course of the fight in order to not starve
+--local ENERGY_PER_HASTE_POINT = .01 / 375 * 10 --Energy regen granted by a single point of haste
