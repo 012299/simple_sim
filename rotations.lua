@@ -47,7 +47,8 @@ function calculate_downtime(haste, energy_out, duration, bob_cd)
             energy_def = TP_COST - 2 * energy_regen + energy_def -- TP energy requirement
         end
     end
-    local downtime = (energy_def / energy_regen - ek_adjust) / (bob_cd) * RELEVANT_FIGHT_LENGTH
+    local downtime_seconds = energy_def/energy_regen-ek_adjust
+    local downtime = (downtime_seconds) / (bob_cd+downtime_seconds+ek_adjust) * RELEVANT_FIGHT_LENGTH
     if downtime < 0 then
         return 1
     end
