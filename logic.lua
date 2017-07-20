@@ -6,11 +6,6 @@
 -- To change this template use File | Settings | File Templates.
 --
 local name, SimpleSim = ...;
-SimpleSim.BASE_CONC = 4000
-SimpleSim.CONC_INCREASE = 300
-SimpleSim.CONC_UPTIME = 20 / 60
-SimpleSim.CONCORDANCE_ID = 239042
-SimpleSim.FACE_PALM_ID = 213116
 SimpleSim.CACHED_TRAITS = {}
 local base_stats = {}
 local equipped_ratings = {}
@@ -23,7 +18,7 @@ function cache_base_stats()
     base_stats.crit = round(GetCritChance() - GetCombatRatingBonus(CR_CRIT_MELEE), 2)
     base_stats.haste = round(GetHaste() - GetCombatRatingBonus(CR_HASTE_MELEE), 2)
     base_stats.vers = round(CalculateConcVers() / 475, 2)
-    SimpleSim.CACHED_TRAITS = get_traits({ CONCORDANCE_ID, FACE_PALM_ID })
+    SimpleSim.CACHED_TRAITS = get_traits({ SimpleSim.Relics.CONCORDANCE_ID, SimpleSim.Relics.FACE_PALM_ID, SimpleSim.Relics.OBSIDIAN_FIST_ID})
 end
 
 -- Gets calculated whenever gear changes
@@ -72,6 +67,8 @@ end
 
 function calculate_stat_score(stats)
     local haste = calc_haste_val_3tp(stats['haste'])
-    return stats['agi'] * (1 + stats['mastery'] / 100) * (1 + stats['crit'] / 100) * (1 + stats['vers'] / 100) * haste
+    local crit_adjust = SimpleSim.CACHED_TRAITS[SimpleSim.Relics.OBSIDIAN_FIST_ID]*SimpleSim.Relics.OSF_MOD * SimpleSim.Settings.BOS_DMG.THREE_TP
+    return stats['agi'] * (1 + stats['mastery'] / 100) * (1 + stats['crit'] / 100 + crit_adjust) * (1 + stats['vers'] / 100) * haste
 end
+
 

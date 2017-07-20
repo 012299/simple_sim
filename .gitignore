@@ -188,7 +188,8 @@ luac.out
 
 # Excel temporary
 ~$*.xls*
-
+# Excel files
+*.xlsx
 # Excel Backup File
 *.xlk
 

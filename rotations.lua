@@ -13,16 +13,9 @@ Energy requirement to be able to start a cycle and cast the first TP
  ]]
 local name, SimpleSim = ...;
 
-local FIGHT_LENGHT = 300 -- used for BL
-local RELEVANT_FIGHT_LENGTH = (FIGHT_LENGHT - 40) / FIGHT_LENGHT -- starvation during BL doesn't occur, haste is worthless during BL
-local BOB_CD = 90
-local EK_CD = 75
-local BASE_REGEN = 10
-local KS_COST = 40
-local TP_COST = 25
 
 function calc_haste_val_3tp(haste)
-    local fp_ranks = SimpleSim.CACHED_TRAITS[SimpleSim.FACE_PALM_ID] -- #TODO grab actual ranks
+    local fp_ranks = SimpleSim.CACHED_TRAITS[SimpleSim.relics.FACE_PALM_ID] -- #TODO grab actual ranks
     local rotation_duration = 9
     local energy_out = 115
     local brew_reduction_cycle = 4.8 + 3 + (3 * .1 * fp_ranks) + rotation_duration -- 3 tps, 1 KS
