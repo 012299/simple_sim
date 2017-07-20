@@ -1,5 +1,5 @@
 ## Interface: 70200
-## Title: SimpleWeights
+## Title: SimpleBrewSim
 ## Author: Original Retard
 ## Version: 0.1
 ## OptionalDeps: LibArtifactData-1.0
