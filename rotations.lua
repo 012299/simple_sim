@@ -1,10 +1,3 @@
---
--- Created by IntelliJ IDEA.
--- User: brontosaurus
--- Date: 18/07/2017
--- Time: 17:20
--- To change this template use File | Settings | File Templates.
---
 
 -- 3tp energy calculations
 --[[ 3tp rotation, 9 casts per cycle
@@ -25,7 +18,7 @@ function settings:calc_haste_val_3tp(haste)
 end
 
 -- Calculates after how many cycles there's not enough energy for the next KS
-function calculate_downtime(haste, energy_out, duration, bob_cd)
+local function calculate_downtime(haste, energy_out, duration, bob_cd)
     local haste_perc = haste / settings.HASTE
     local energy_regen = settings.Settings.BASE_REGEN * (1 + haste_perc / 100)
     local energy = UnitPowerMax("player")

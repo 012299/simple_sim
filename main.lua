@@ -1,10 +1,3 @@
---
--- Created by IntelliJ IDEA.
--- User: brontosaurus
--- Date: 16/07/2017
--- Time: 12:36
--- To change this template use File | Settings | File Templates.
---
 local name, settings = ...;
 local lineAdded = false
 
@@ -16,7 +9,7 @@ if spec ~= "Brewmaster" then
     return
 end ]] --
 -- Maybe add a 'do nothing if same item'
-function show_upgrade()
+local function show_upgrade()
     local new_item_link = select(2, GameTooltip:GetItem())
     local equip_slot, _, _, item_class, item_subclass = select(9, GetItemInfo(new_item_link))
     if item_class ~= LE_ITEM_CLASS_ARMOR then
@@ -53,14 +46,23 @@ local function OnTooltipCleared(tooltip, ...)
     lineAdded = false
 end
 
-local frame = CreateFrame("FRAME", "SimpleBrewSimFrame")
-frame:RegisterEvent("PLAYER_ENTERING_WORLD");
-local function eventHandler(self, event, ...)
+local frame, events = CreateFrame("FRAME", "SimpleBrewSimFrame"), {};
+--function events:PLAYER_ENTERING_WORLD(...)end
+function events:PLAYER_EQUIPMENT_CHANGED(...)
+    settings:cache_equipped_ratings()
+end
+function events:PLAYER_LOGIN(...)
+    settings:cache_traits()
     settings:cache_base_stats()
     settings:cache_equipped_ratings()
     GameTooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
     GameTooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
 end
+frame:SetScript("OnEvent", function(self,event, ...)
+    events[event](self, ...);
+end)
+for k,v in pairs(events) do
+    frame:RegisterEvent(k)
+end
 
-frame:SetScript("OnEvent", eventHandler)
 

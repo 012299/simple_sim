@@ -1,10 +1,3 @@
---
--- Created by IntelliJ IDEA.
--- User: brontosaurus
--- Date: 18/07/2017
--- Time: 11:06
--- To change this template use File | Settings | File Templates.
---
 local name, settings = ...;
 local LAD = LibStub("LibArtifactData-1.0")
 
@@ -16,12 +9,16 @@ end
 
 function settings:ARTIFACT_TRAITS_CHANGED()
     print('ARTIFACT_TRAITS_CHANGED')
+    settings:cache_traits()
     settings:cache_base_stats()
 end
-function settings:get_traits(spellIDs)
-    LAD:ForceUpdate()
-    local traits = select(2, LAD:GetArtifactTraits())
 
+function settings:get_traits(spellIDs)
+    local traits = select(2, LAD:GetArtifactTraits())
+    if not traits then
+        LAD:ForceUpdate()
+        traits = select(2, LAD:GetArtifactTraits())
+    end
     local return_list = {}
     if not traits then
         return return_list
@@ -43,4 +40,5 @@ end
 function settings:get_delta(stat_delta, stat)
     return stat_delta[stat] or 0
 end
-LAD.RegisterCallback(settings,"ARTIFACT_TRAITS_CHANGED")
+
+LAD.RegisterCallback(settings, "ARTIFACT_TRAITS_CHANGED")

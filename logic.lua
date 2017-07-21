@@ -11,15 +11,16 @@ local equipped_ratings = {}
 
 -- Caching functions
 function settings:cache_base_stats()
-    --Something with base stats
-    local templist = { settings.Relics.CONCORDANCE_ID, settings.Relics.FACE_PALM_ID, settings.Relics.OBSIDIAN_FIST_ID }
-
-    settings.CACHED_TRAITS = settings:get_traits(settings:create_set(templist))
     base_stats.agi = select(2, UnitStat("player", 2)) - select(3, UnitStat("player", 2)) --most likely not needed
     base_stats.mastery = settings.round(GetMastery() - GetCombatRatingBonus(CR_MASTERY), 2)
     base_stats.crit = settings.round(GetCritChance() - GetCombatRatingBonus(CR_CRIT_MELEE), 2)
     base_stats.haste = settings.round(GetHaste() - GetCombatRatingBonus(CR_HASTE_MELEE), 2)
     base_stats.vers = settings.round(CalculateConcVers() / 475, 2)
+end
+
+function settings:cache_traits()
+    local templist = { settings.Relics.CONCORDANCE_ID, settings.Relics.FACE_PALM_ID, settings.Relics.OBSIDIAN_FIST_ID }
+    settings.CACHED_TRAITS = settings:get_traits(settings:create_set(templist))
 end
 
 -- Gets calculated whenever gear changes
@@ -32,7 +33,7 @@ function settings:cache_equipped_ratings()
     equipped_ratings.vers = GetCombatRating(CR_VERSATILITY_DAMAGE_DONE)
 end
 
-function CalculateConcVers()
+local function CalculateConcVers()
     local conc_rank = settings.CACHED_TRAITS[settings.Relics.CONCORDANCE_ID] or 0
 
     local base_vers = 0
@@ -55,8 +56,7 @@ function settings:compare_items(equipped_item, new_item)
     return (new_score - equipped_score) / equipped_score * 100
 end
 
---name, link = GameTooltip:GetItem()-
-function calculate_gear_delta(equipped_item, new_item)
+local function calculate_gear_delta(equipped_item, new_item)
     local stat_delta = GetItemStatDelta(new_item, equipped_item)
     local new_stats = {}
     new_stats.agi = equipped_ratings['agi'] + settings:get_delta(stat_delta, 'ITEM_MOD_AGILITY_SHORT')
@@ -68,10 +68,10 @@ function calculate_gear_delta(equipped_item, new_item)
 end
 
 -- #TODO move OSF mod to rotations, support for multiple rotations
-function calculate_stat_score(stats)
-    local haste = settings:calc_haste_val_3tp(stats['haste'])
+local function calculate_stat_score(stats)
+    local haste_value = settings:calc_haste_val_3tp(stats['haste'])
     local crit_adjust = settings.CACHED_TRAITS[settings.Relics.OBSIDIAN_FIST_ID] * settings.Relics.OSF_MOD * settings.Settings.BOS_DMG.THREE_TP
-    return stats['agi'] * (1 + (stats['mastery']/settings.MASTERY) / 100) * (1 + (stats['crit']/settings.CRIT) / 100 + crit_adjust) * (1 + (stats['vers']/settings.VERS) / 100) * haste
+    return stats['agi'] * (1 + (stats['mastery'] / settings.MASTERY + base_stats.mastery) / 100) * (1 + (stats['crit'] / settings.CRIT + base_stats.crit ) / 100 + crit_adjust) * (1 + (stats['vers'] / settings.VERS + base_stats.vers) / 100) * haste_value
 end
 
 
