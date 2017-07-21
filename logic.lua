@@ -12,7 +12,9 @@ local equipped_ratings = {}
 -- Caching functions
 function settings:cache_base_stats()
     --Something with base stats
-    settings.CACHED_TRAITS = get_traits(settings.create_set({ settings.Relics.CONCORDANCE_ID, settings.Relics.FACE_PALM_ID, settings.Relics.OBSIDIAN_FIST_ID }))
+    local templist = { settings.Relics.CONCORDANCE_ID, settings.Relics.FACE_PALM_ID, settings.Relics.OBSIDIAN_FIST_ID }
+
+    settings.CACHED_TRAITS = settings:get_traits(settings:create_set(templist))
     base_stats.agi = select(2, UnitStat("player", 2)) - select(3, UnitStat("player", 2)) --most likely not needed
     base_stats.mastery = settings.round(GetMastery() - GetCombatRatingBonus(CR_MASTERY), 2)
     base_stats.crit = settings.round(GetCritChance() - GetCombatRatingBonus(CR_CRIT_MELEE), 2)
@@ -24,22 +26,23 @@ end
 -- TODO: consider buffs (and ignore them)
 function settings:cache_equipped_ratings()
     equipped_ratings.agi = select(2, UnitStat("player", 2)) -- support for flasks etc
-    equipped_ratings.mastery = GetCombatRatingBonus(CR_MASTERY)
-    equipped_ratings.crit = GetCombatRatingBonus(CR_CRIT_MELEE)
-    equipped_ratings.haste = GetCombatRatingBonus(CR_HASTE_MELEE)
-    equipped_ratings.vers = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE)
+    equipped_ratings.mastery = GetCombatRating(CR_MASTERY)
+    equipped_ratings.crit = GetCombatRating(CR_CRIT_MELEE)
+    equipped_ratings.haste = GetCombatRating(CR_HASTE_MELEE)
+    equipped_ratings.vers = GetCombatRating(CR_VERSATILITY_DAMAGE_DONE)
 end
 
 function CalculateConcVers()
-    local conc_rank = settings.CACHED_TRAITS[settings.Relics.CONCORDANCE_ID]
+    local conc_rank = settings.CACHED_TRAITS[settings.Relics.CONCORDANCE_ID] or 0
+
     local base_vers = 0
     if conc_rank > 0 then
-        base_vers = settings.settings.BASE_CONC
+        base_vers = settings.Settings.BASE_CONC
         conc_rank = conc_rank - 1
         for i = conc_rank, 1, -1 do
-            base_vers = base_vers + settings.settings.CONC_INCREASE
+            base_vers = base_vers + settings.Settings.CONC_INCREASE
         end
-        base_vers = base_vers * settings.settings.CONC_UPTIME
+        base_vers = base_vers * settings.Settings.CONC_UPTIME
     end
     return base_vers
 end
@@ -54,7 +57,7 @@ end
 
 --name, link = GameTooltip:GetItem()-
 function calculate_gear_delta(equipped_item, new_item)
-    local stat_delta = GetItemStatDelta(equipped_item, new_item)
+    local stat_delta = GetItemStatDelta(new_item, equipped_item)
     local new_stats = {}
     new_stats.agi = equipped_ratings['agi'] + settings:get_delta(stat_delta, 'ITEM_MOD_AGILITY_SHORT')
     new_stats.mastery = equipped_ratings['mastery'] + settings:get_delta(stat_delta, 'ITEM_MOD_MASTERY_RATING_SHORT')
@@ -64,10 +67,11 @@ function calculate_gear_delta(equipped_item, new_item)
     return new_stats
 end
 
+-- #TODO move OSF mod to rotations, support for multiple rotations
 function calculate_stat_score(stats)
-    local haste = SimpleSimcalc_haste_val_3tp(stats['haste'])
+    local haste = settings:calc_haste_val_3tp(stats['haste'])
     local crit_adjust = settings.CACHED_TRAITS[settings.Relics.OBSIDIAN_FIST_ID] * settings.Relics.OSF_MOD * settings.Settings.BOS_DMG.THREE_TP
-    return stats['agi'] * (1 + stats['mastery'] / 100) * (1 + stats['crit'] / 100 + crit_adjust) * (1 + stats['vers'] / 100) * haste
+    return stats['agi'] * (1 + (stats['mastery']/settings.MASTERY) / 100) * (1 + (stats['crit']/settings.CRIT) / 100 + crit_adjust) * (1 + (stats['vers']/settings.VERS) / 100) * haste
 end
 
 

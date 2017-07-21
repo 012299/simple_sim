@@ -10,17 +10,27 @@ local LAD = LibStub("LibArtifactData-1.0")
 
 function settings:create_set(list)
     local set = {}
-    for _, l in pairs(list) do set[l] = true end
+    for _, l in ipairs(list) do set[l] = true end
     return set
 end
 
+function settings:ARTIFACT_TRAITS_CHANGED()
+    print('ARTIFACT_TRAITS_CHANGED')
+    settings:cache_base_stats()
+end
 function settings:get_traits(spellIDs)
+    LAD:ForceUpdate()
     local traits = select(2, LAD:GetArtifactTraits())
+
     local return_list = {}
-    for key, trait in pairs(traits) do
+    if not traits then
+        return return_list
+    end
+
+    for _, trait in pairs(traits) do
         local spellID = trait['spellID']
         if spellIDs[spellID] then
-            returnList[spellID] = trait['currentRank']
+            return_list[spellID] = trait['currentRank']
         end
     end
     return return_list
@@ -33,3 +43,4 @@ end
 function settings:get_delta(stat_delta, stat)
     return stat_delta[stat] or 0
 end
+LAD.RegisterCallback(settings,"ARTIFACT_TRAITS_CHANGED")
