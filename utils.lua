@@ -10,7 +10,7 @@ local LAD = LibStub("LibArtifactData-1.0")
 
 function settings:create_set(list)
     local set = {}
-    for _, l in ipairs(list) do set[l] = true end
+    for _, l in pairs(list) do set[l] = true end
     return set
 end
 

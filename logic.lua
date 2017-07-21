@@ -12,12 +12,12 @@ local equipped_ratings = {}
 -- Caching functions
 function settings:cache_base_stats()
     --Something with base stats
-    base_stats.agi = select(2, UnitStat("player", 2)) - select(3, UnitStat("player", 2)) --most likely not needed
-    base_stats.mastery = round(GetMastery() - GetCombatRatingBonus(CR_MASTERY), 2)
-    base_stats.crit = round(GetCritChance() - GetCombatRatingBonus(CR_CRIT_MELEE), 2)
-    base_stats.haste = round(GetHaste() - GetCombatRatingBonus(CR_HASTE_MELEE), 2)
-    base_stats.vers = round(CalculateConcVers() / 475, 2)
     settings.CACHED_TRAITS = get_traits(settings.create_set({ settings.Relics.CONCORDANCE_ID, settings.Relics.FACE_PALM_ID, settings.Relics.OBSIDIAN_FIST_ID }))
+    base_stats.agi = select(2, UnitStat("player", 2)) - select(3, UnitStat("player", 2)) --most likely not needed
+    base_stats.mastery = settings.round(GetMastery() - GetCombatRatingBonus(CR_MASTERY), 2)
+    base_stats.crit = settings.round(GetCritChance() - GetCombatRatingBonus(CR_CRIT_MELEE), 2)
+    base_stats.haste = settings.round(GetHaste() - GetCombatRatingBonus(CR_HASTE_MELEE), 2)
+    base_stats.vers = settings.round(CalculateConcVers() / 475, 2)
 end
 
 -- Gets calculated whenever gear changes
@@ -31,15 +31,15 @@ function settings:cache_equipped_ratings()
 end
 
 function CalculateConcVers()
-    local conc_rank = CACHED_TRAITS[CONCORDANCE_ID]
+    local conc_rank = settings.CACHED_TRAITS[settings.Relics.CONCORDANCE_ID]
     local base_vers = 0
     if conc_rank > 0 then
-        base_vers = BASE_CONC
+        base_vers = settings.settings.BASE_CONC
         conc_rank = conc_rank - 1
         for i = conc_rank, 1, -1 do
-            base_vers = base_vers + CONC_INCREASE
+            base_vers = base_vers + settings.settings.CONC_INCREASE
         end
-        base_vers = base_vers * CONC_UPTIME
+        base_vers = base_vers * settings.settings.CONC_UPTIME
     end
     return base_vers
 end
