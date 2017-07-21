@@ -27,7 +27,7 @@ settings.Relics.OsF_MoD = 0.03
 settings.Relics.CONCORDANCE_ID = 239042
 settings.Relics.FACE_PALM_ID = 213116
 settings.Relics.OBSIDIAN_FIST_ID = 213051
-
+settings.CACHED_TRAITS = {}
 --Armor constants
 settings.Armour.ARMOUR_TYPES = {LE_ITEM_ARMOR_GENERIC=True,LE_ARMOR_ITEM_LEATHER=True } -- #TODO localisation GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR)
 

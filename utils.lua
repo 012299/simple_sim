@@ -7,7 +7,6 @@
 --
 local name, settings = ...;
 local LAD = LibStub("LibArtifactData-1.0")
--- #TODO will most likely need to adjust spellID array to table
 
 function settings:create_set(list)
     local set = {}

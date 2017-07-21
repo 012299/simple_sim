@@ -6,7 +6,6 @@
 -- To change this template use File | Settings | File Templates.
 --
 local name, settings = ...;
-settings.CACHED_TRAITS = {}
 local base_stats = {}
 local equipped_ratings = {}
 

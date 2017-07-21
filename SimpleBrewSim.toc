@@ -5,6 +5,6 @@
 ## OptionalDeps: LibArtifactData-1.0
 settings.lua
 utils.lua
-main.lua
-logic.lua
 rotations.lua
+logic.lua
+main.lua
