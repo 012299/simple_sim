@@ -15,10 +15,12 @@ local haste_value = 0
 -- Caching functions
 function SimpleBrewSim:cache_base_stats()
     base_stats.agi = select(2, UnitStat("player", 2)) - select(3, UnitStat("player", 2)) --most likely not needed
-    base_stats.mastery = SimpleBrewSim.round(GetMastery() - GetCombatRatingBonus(CR_MASTERY), 2)
-    base_stats.crit = SimpleBrewSim.round(GetCritChance() - GetCombatRatingBonus(CR_CRIT_MELEE), 2)
-    base_stats.haste = SimpleBrewSim.round(GetHaste() - GetCombatRatingBonus(CR_HASTE_MELEE), 2)
-    base_stats.vers = SimpleBrewSim.round(SimpleBrewSim:CalculateConcVers() / 475, 2)
+    base_stats.mastery = SimpleBrewSim:round(GetMastery() - GetCombatRatingBonus(CR_MASTERY), 2)
+    base_stats.crit = SimpleBrewSim:round(GetCritChance() - GetCombatRatingBonus(CR_CRIT_MELEE), 2)
+    base_stats.haste = SimpleBrewSim:round(GetHaste() - GetCombatRatingBonus(CR_HASTE_MELEE), 2)
+    -- no round for conc vers
+    base_stats.vers = SimpleBrewSim:CalculateConcVers() / 475
+    --base_stats.vers = SimpleBrewSim:round(SimpleBrewSim:CalculateConcVers() / 475, 2)
 end
 
 function SimpleBrewSim:cache_traits()
@@ -74,6 +76,13 @@ end
 -- #TODO move OSF mod to rotations, support for multiple rotations
 function SimpleBrewSim:calculate_stat_score(stats)
     haste_value = SimpleBrewSim:calc_haste_val_3tp(stats['haste'])
+--[[
+    print('agi ', stats['agi'])
+    print('mastery: ', (1 + (stats['mastery'] / SimpleBrewSim.MASTERY + base_stats.mastery) / 100))
+    print('crit: ', (1 + (stats['crit'] / SimpleBrewSim.CRIT + base_stats.crit) / 100 + crit_adjust))
+    print('vers: ', (1 + (stats['vers'] / SimpleBrewSim.VERS + base_stats.vers) / 100))
+    print('haste: ', haste_value)
+    ]]--
     return stats['agi'] * (1 + (stats['mastery'] / SimpleBrewSim.MASTERY + base_stats.mastery) / 100) * (1 + (stats['crit'] / SimpleBrewSim.CRIT + base_stats.crit) / 100 + crit_adjust) * (1 + (stats['vers'] / SimpleBrewSim.VERS + base_stats.vers) / 100) * haste_value
 end
 
