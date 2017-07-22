@@ -5,39 +5,38 @@
 -- Time: 21:33
 -- To change this template use File | Settings | File Templates.
 --
-local name, settings = ...;
+local name, SimpleBrewSim = ...;
 
 
-settings.Settings = {}
-settings.Relics = {}
-settings.Armour = {ARMOUR_TYPES={}}
-settings.CACHED_TRAITS = {}
+SimpleBrewSim.Settings = {}
+SimpleBrewSim.Relics = {}
+SimpleBrewSim.Armour = {ARMOUR_TYPES={}}
+SimpleBrewSim.CACHED_TRAITS = {}
 -- rating values
-settings.MASTERY = 400
-settings.CRIT = 400
-settings.HASTE = 375
-settings.VERS = 475
+SimpleBrewSim.MASTERY = 400
+SimpleBrewSim.CRIT = 400
+SimpleBrewSim.HASTE = 375
+SimpleBrewSim.VERS = 475
 -- Fight settings
-settings.Settings.BASE_CONC = 4000
-settings.Settings.CONC_INCREASE = 300
-settings.Settings.CONC_UPTIME = 20 / 60
-settings.Settings.FIGHT_LENGHT = 300 -- used for BL
-settings.Settings.RELEVANT_FIGHT_LENGTH = (settings.Settings.FIGHT_LENGHT - 40) / settings.Settings.FIGHT_LENGHT -- starvation during BL doesn't occur, haste is worthless during BL
-settings.Settings.BOB_CD = 90
-settings.Settings.EK_CD = 75
-settings.Settings.BASE_REGEN = 10
-settings.Settings.KS_COST = 40
-settings.Settings.TP_COST = 25
-settings.Settings.BOS_DMG = {TWO_TP=0,THREE_TP=0.266173880000277} --chest/shoulder support
+SimpleBrewSim.Settings.BASE_CONC = 4000
+SimpleBrewSim.Settings.CONC_INCREASE = 300
+SimpleBrewSim.Settings.CONC_UPTIME = 20 / 60
+SimpleBrewSim.Settings.FIGHT_LENGHT = 300 -- used for BL
+SimpleBrewSim.Settings.RELEVANT_FIGHT_LENGTH = (SimpleBrewSim.Settings.FIGHT_LENGHT - 40) / SimpleBrewSim.Settings.FIGHT_LENGHT -- starvation during BL doesn't occur, haste is worthless during BL
+SimpleBrewSim.Settings.BOB_CD = 90
+SimpleBrewSim.Settings.EK_CD = 75
+SimpleBrewSim.Settings.BASE_REGEN = 10
+SimpleBrewSim.Settings.KS_COST = 40
+SimpleBrewSim.Settings.TP_COST = 25
+SimpleBrewSim.Settings.BOS_DMG = {TWO_TP=0,THREE_TP=0.266173880000277} --chest/shoulder support
 -- Relic vars
-settings.Relics.OSF_MOD = 0.03
-settings.Relics.CONCORDANCE_ID = 239042
-settings.Relics.FACE_PALM_ID = 213116
-settings.Relics.OBSIDIAN_FIST_ID = 213051
-
+SimpleBrewSim.Relics.OSF_MOD = 0.03
+SimpleBrewSim.Relics.CONCORDANCE_ID = 239042
+SimpleBrewSim.Relics.FACE_PALM_ID = 213116
+SimpleBrewSim.Relics.OBSIDIAN_FIST_ID = 213051
 --Armor constants
-settings.Armour.ARMOUR_TYPES[LE_ITEM_ARMOR_GENERIC]=true
-settings.Armour.ARMOUR_TYPES[LE_ITEM_ARMOR_LEATHER]=true  -- #TODO localisation GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR)
+SimpleBrewSim.Armour.ARMOUR_TYPES[LE_ITEM_ARMOR_GENERIC]=true
+SimpleBrewSim.Armour.ARMOUR_TYPES[LE_ITEM_ARMOR_LEATHER]=true  -- #TODO localisation GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR)
 
 
 
@@ -45,7 +44,7 @@ settings.Armour.ARMOUR_TYPES[LE_ITEM_ARMOR_LEATHER]=true  -- #TODO localisation 
 
 --Armorslot constants because blizz is dumb
 -- Maps between INVTYPEs and slot IDs
-settings.INV_TYPES = {
+SimpleBrewSim.INV_TYPES = {
     INVTYPE_HEAD = 1,
     INVTYPE_NECK = 2,
     INVTYPE_SHOULDER = 3,

@@ -8,7 +8,11 @@ function SimpleBrewSim:create_set(list)
 end
 
 function SimpleBrewSim:ARTIFACT_TRAITS_CHANGED()
-    print('ARTIFACT_TRAITS_CHANGED')
+    SimpleBrewSim:cache_traits()
+    SimpleBrewSim:cache_base_stats()
+end
+
+function SimpleBrewSim:ARTIFACT_ADDED()
     SimpleBrewSim:cache_traits()
     SimpleBrewSim:cache_base_stats()
 end
@@ -46,3 +50,5 @@ function SimpleBrewSim:get_delta(stat_delta, stat)
 end
 
 LAD.RegisterCallback(SimpleBrewSim, "ARTIFACT_TRAITS_CHANGED")
+LAD.RegisterCallback(SimpleBrewSim, "ARTIFACT_ADDED")
+

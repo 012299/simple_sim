@@ -11,6 +11,7 @@ local equipped_ratings = {}
 local crit_adjust = 0
 local stat_delta = {}
 local new_stats = {}
+local relic_list = SimpleBrewSim:create_set({ SimpleBrewSim.Relics.CONCORDANCE_ID, SimpleBrewSim.Relics.FACE_PALM_ID, SimpleBrewSim.Relics.OBSIDIAN_FIST_ID })
 local haste_value = 0
 -- Caching functions
 function SimpleBrewSim:cache_base_stats()
@@ -24,8 +25,7 @@ function SimpleBrewSim:cache_base_stats()
 end
 
 function SimpleBrewSim:cache_traits()
-    local templist = { SimpleBrewSim.Relics.CONCORDANCE_ID, SimpleBrewSim.Relics.FACE_PALM_ID, SimpleBrewSim.Relics.OBSIDIAN_FIST_ID }
-    SimpleBrewSim.CACHED_TRAITS = SimpleBrewSim:get_traits(SimpleBrewSim:create_set(templist))
+    SimpleBrewSim.CACHED_TRAITS = SimpleBrewSim:get_traits(relic_list)
     crit_adjust = SimpleBrewSim.CACHED_TRAITS[SimpleBrewSim.Relics.OBSIDIAN_FIST_ID] * SimpleBrewSim.Relics.OSF_MOD * SimpleBrewSim.Settings.BOS_DMG.THREE_TP
 end
 

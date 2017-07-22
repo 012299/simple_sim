@@ -36,7 +36,7 @@ local function show_dps_change()
     -- round number workaround
     --attempt to compare string with number
     local dps_value = SimpleBrewSim:compare_items(equipped_item_link, new_item_link) -- string to number
-  --  print('dps value: ', dps_value)
+    --  print('dps value: ', dps_value)
     local dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 4), 3)
     if dps_value < 0 then
         return string.format("DPS loss: %s%%", dps_str_value), 194 / 255, 123 / 255, 160 / 255
