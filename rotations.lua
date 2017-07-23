@@ -8,18 +8,8 @@ local name, SimpleBrewSim = ...;
 
 
 
-function SimpleBrewSim:calc_haste_val_3tp(haste)
-    local fp_ranks = SimpleBrewSim.CACHED_TRAITS[SimpleBrewSim.FACE_PALM_ID]
-    local rotation_duration = 9
-    local energy_out = 115
-    local brew_reduction_cycle = 4.8 + 3 + (3 * .1 * fp_ranks) + rotation_duration -- 3 tps, 1 KS
-    local brew_gen_sec = brew_reduction_cycle / rotation_duration
-    local bob_cd = math.floor(SimpleBrewSim.BOB_CD / brew_gen_sec/rotation_duration)*rotation_duration +3 --Energy starvation only occurs during the first 3 casts (ks/tp) of a cycle if that cycle has to be started without BoB up
-    return SimpleBrewSim:calculate_downtime(haste, energy_out, rotation_duration, bob_cd)
-end
-
--- Calculates after how many cycles there's not enough energy for the next KS
-function SimpleBrewSim:calculate_downtime(haste, energy_out, duration, bob_cd)
+-- TODO #arcway necklace support etc
+local function calculate_downtime(haste, energy_out, duration, bob_cd)
     local haste_perc = haste / SimpleBrewSim.HASTE
     local energy_regen = SimpleBrewSim.BASE_REGEN * (1 + haste_perc / 100)
     local energy = UnitPowerMax("player")
@@ -42,6 +32,16 @@ function SimpleBrewSim:calculate_downtime(haste, energy_out, duration, bob_cd)
     end
     return 1 - downtime
 end
+function SimpleBrewSim:calc_haste_val_3tp(haste)
+    local fp_ranks = SimpleBrewSim.CACHED_TRAITS[SimpleBrewSim.FACE_PALM_ID]
+    local rotation_duration = 9
+    local energy_out = 115
+    local brew_reduction_cycle = 4.8 + 3 + (3 * .1 * fp_ranks) + rotation_duration -- 3 tps, 1 KS
+    local brew_gen_sec = brew_reduction_cycle / rotation_duration
+    local bob_cd = math.floor(SimpleBrewSim.BOB_CD / brew_gen_sec/rotation_duration)*rotation_duration +3 --Energy starvation only occurs during the first 3 casts (ks/tp) of a cycle if that cycle has to be started without BoB up
+    return calculate_downtime(haste, energy_out, rotation_duration, bob_cd)
+end
+
 
 
 

@@ -12,7 +12,6 @@ local crit_adjust = 0
 local stat_delta = {}
 local new_stats = {}
 local relic_list = SimpleBrewSim:create_set({ SimpleBrewSim.CONCORDANCE_ID, SimpleBrewSim.FACE_PALM_ID, SimpleBrewSim.OBSIDIAN_FIST_ID })
--- Caching functions
 
 local function calculate_gear_delta(equipped_item, new_item)
     wipe(stat_delta)

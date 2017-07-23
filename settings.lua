@@ -16,7 +16,7 @@ SimpleBrewSim['Masterful Shadowruby'] = {'mastery', 150}
 ---
 --- TABLES
 SimpleBrewSim.CACHED_TRAITS = {}
-SimpleBrewSim.ARMOUR_TYPES ={}
+--SimpleBrewSim.ARMOUR_TYPES ={}
 --- RATING VALUES values #TODO change to support multiplication
 SimpleBrewSim.MASTERY = 400
 SimpleBrewSim.CRIT = 400

@@ -2,33 +2,28 @@ local name, SimpleBrewSim = ...;
 local lineAdded = false
 local is_active_spec = false
 local INV_TYPES = SimpleBrewSim.INV_TYPES
--- move to function, run when spec changes
 
---[[
-local spec = select(2, GetSpecializationInfo(GetSpecialization(), nil, nil, nil, UnitSex("player")));
-if spec ~= "Brewmaster" then
-    return
-end ]] --
--- Maybe add a 'do nothing if same item'
 local function show_dps_change()
-    local new_item_name, new_item_link = GameTooltip:GetItem()
+    local _, new_item_link = GameTooltip:GetItem()
     if not new_item_link or IsEquippedItem(new_item_link) then
-        return nil
+        return
     end
     local equip_slot, _, _, item_class, item_subclass = select(9, GetItemInfo(new_item_link))
     if item_class ~= LE_ITEM_CLASS_ARMOR then
-        return nil
+        return
     end
     if not SimpleBrewSim.ARMOUR_TYPES[item_subclass] and not SimpleBrewSim.ARMOUR_TYPES[equip_slot] then
-        return nil
+        return
     end
     local equipped_id = INV_TYPES[equip_slot]
-    if not equipped_id then
-        return nil
-    end
+    --- remove for now
+    --[[
+        if not equipped_id then
+            return
+        end]] --
     if equipped_id == INV_TYPES['INVTYPE_TRINKET'] or equipped_id == INV_TYPES['INVTYPE_FINGER'] then
-        -- take care of multiple items
-        return nil
+        -- get item for same link, get name
+        return
     end
     local equipped_item_link = GetInventoryItemLink("player", equipped_id)
     -- round number workaround
