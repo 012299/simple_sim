@@ -11,20 +11,27 @@ local green_gain = 1
 local blue_gain = 0.501960784
 
 
-local function calculate_dps_change(new_item_link, equipped_item_link)
+local function calculate_dps_change(tooltip, new_item_link, equipped_id)
 
+    local equipped_item_link = GetInventoryItemLink("player", equipped_id)
+    local item_name = GetItemInfo(equipped_item_link)
+    local dps_change = ''
+    local r, g, b = 0, 0, 0
     -- round number workaround
     --attempt to compare string with number
     local dps_value = SimpleBrewSim:compare_items(equipped_item_link, new_item_link) -- string to number
     --  print('dps value: ', dps_value)
     local dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 4), 3)
     if dps_value < 0 then
-        return "DPS loss: " .. dps_str_value .. "%", red_loss, green_loss, blue_loss
+        dps_change, r, g, b = "loss: ", red_loss, green_loss, blue_loss
+    else
+        dps_change, r, g, b = "gain: ", red_gain, green_gain, blue_gain
     end
-    return "DPS gain: " .. dps_str_value .. "%", red_gain,  green_gain, blue_gain
+    tooltip:AddLine("DPS "..dps_change..dps_str_value.."% ("..item_name..")", r, g, b) --#TODO look into string concat
+
 end
 
-local function show_dps_change()
+local function show_dps_change(tooltip)
     local _, new_item_link = GameTooltip:GetItem()
     if not new_item_link or IsEquippedItem(new_item_link) then
         return
@@ -38,29 +45,21 @@ local function show_dps_change()
     end
 
     local equipped_id = INV_TYPES[equip_slot]
-    local equipped_item_link = GetInventoryItemLink("player", equipped_id)
-    local dps_string, r, g, b = calculate_dps_change(new_item_link, equipped_item_link)
+    calculate_dps_change(tooltip, new_item_link, equipped_id)
 
     if equipped_id == INV_TYPES['INVTYPE_TRINKET'] or equipped_id == INV_TYPES['INVTYPE_FINGER'] then
-        -- get itemname for first item
-        local item_name = GetItemInfo(equipped_item_link)
-        dps_string = dps_string .. ' ('.. item_name .. ')'
+        equipped_id = equipped_id + 1
+        calculate_dps_change(tooltip, new_item_link, equipped_id)
     end
-    return dps_string, r, g, b
 end
 
 
 local function OnTooltipSetItem(tooltip, ...)
-    if not is_active_spec then
+    if not is_active_spec or lineAdded then
         return
     end
-    if not lineAdded then
-        local upgrade_text, r, g, b = show_dps_change()
-        if upgrade_text then
-            tooltip:AddLine(upgrade_text, r, g, b)
-            lineAdded = true
-        end
-    end
+    show_dps_change(tooltip)
+    lineAdded = true
 end
 
 local function OnTooltipCleared(tooltip, ...)
