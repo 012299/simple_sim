@@ -1,6 +1,6 @@
 local name, SimpleBrewSim = ...;
 local LAD = LibStub("LibArtifactData-1.0")
-
+local brew_ID = 128938
 function SimpleBrewSim:create_set(list)
     local set = {}
     for _, l in ipairs(list) do set[l] = true end
@@ -8,20 +8,22 @@ function SimpleBrewSim:create_set(list)
 end
 
 function SimpleBrewSim:ARTIFACT_TRAITS_CHANGED()
+    print('traits changed')
     SimpleBrewSim:cache_traits()
-    SimpleBrewSim:calculate_conc_vers()
 end
 
-function SimpleBrewSim:ARTIFACT_ADDED()
+function SimpleBrewSim:ARTIFACT_ADDED(event, artifactID)
+    if artifactID ~= brew_ID then
+        return
+    end
     SimpleBrewSim:cache_traits()
-    SimpleBrewSim:calculate_conc_vers()
 end
 
 function SimpleBrewSim:get_traits(spellIDs)
-    local traits = select(2, LAD:GetArtifactTraits())
+    local _, traits = LAD:GetArtifactTraits()
     if not traits then
         LAD:ForceUpdate()
-        traits = select(2, LAD:GetArtifactTraits())
+        _, traits = LAD:GetArtifactTraits()
     end
     local return_list = {}
     if not traits then

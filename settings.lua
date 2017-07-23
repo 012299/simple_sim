@@ -17,7 +17,7 @@ local name, SimpleBrewSim = ...;
 --- TABLES
 SimpleBrewSim.CACHED_TRAITS = {}
 SimpleBrewSim.ARMOUR_TYPES ={}
---- RATING VALUES values
+--- RATING VALUES values #TODO change to support multiplication
 SimpleBrewSim.MASTERY = 400
 SimpleBrewSim.CRIT = 400
 SimpleBrewSim.HASTE = 375

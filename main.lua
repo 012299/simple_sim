@@ -1,6 +1,7 @@
 local name, SimpleBrewSim = ...;
 local lineAdded = false
 local is_active_spec = false
+local INV_TYPES = SimpleBrewSim.INV_TYPES
 -- move to function, run when spec changes
 
 --[[
@@ -10,7 +11,7 @@ if spec ~= "Brewmaster" then
 end ]] --
 -- Maybe add a 'do nothing if same item'
 local function show_dps_change()
-    local new_item_link = select(2, GameTooltip:GetItem())
+    local new_item_name, new_item_link = GameTooltip:GetItem()
     if not new_item_link or IsEquippedItem(new_item_link) then
         return nil
     end
@@ -21,13 +22,12 @@ local function show_dps_change()
     if not SimpleBrewSim.ARMOUR_TYPES[item_subclass] and not SimpleBrewSim.ARMOUR_TYPES[equip_slot] then
         return nil
     end
-    local equipped_id = SimpleBrewSim.INV_TYPES[equip_slot]
+    local equipped_id = INV_TYPES[equip_slot]
     if not equipped_id then
         return nil
     end
-    if equipped_id == SimpleBrewSim.INV_TYPES['INVTYPE_TRINKET'] or equipped_id == SimpleBrewSim.INV_TYPES[INVTYPE_FINGER] then
+    if equipped_id == INV_TYPES['INVTYPE_TRINKET'] or equipped_id == INV_TYPES['INVTYPE_FINGER'] then
         -- take care of multiple items
-        print('it\'s a finger or trink')
         return nil
     end
     local equipped_item_link = GetInventoryItemLink("player", equipped_id)
@@ -37,9 +37,9 @@ local function show_dps_change()
     --  print('dps value: ', dps_value)
     local dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 4), 3)
     if dps_value < 0 then
-        return string.format("DPS loss: %s%%", dps_str_value), 194 / 255, 123 / 255, 160 / 255
+        return "DPS loss: " .. dps_str_value .. "%", 194 / 255, 123 / 255, 160 / 255
     end
-    return string.format("DPS gain %s%%", dps_str_value), 0, 255 / 255, 128 / 255
+    return "DPS gain: " .. dps_str_value .. "%", 0, 255 / 255, 128 / 255
 end
 
 local function OnTooltipSetItem(tooltip, ...)
@@ -68,6 +68,7 @@ local frame, events = CreateFrame("FRAME", "SimpleBrewSimFrame"), {};
 function events:PLAYER_SPECIALIZATION_CHANGED(...)
     check_spec()
     if is_active_spec then
+        print('player spec changed')
         SimpleBrewSim:cache_traits()
         SimpleBrewSim:cache_base_stats()
         SimpleBrewSim:cache_equipped_ratings()
@@ -86,7 +87,7 @@ function events:PLAYER_LOGIN(...)
     GameTooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
     check_spec()
     if is_active_spec then
-        SimpleBrewSim:cache_traits()
+        --- SimpleBrewSim:cache_traits() #TODO Might need to re-enable later, avoid for now since artifact gets added on login
         SimpleBrewSim:cache_base_stats()
         SimpleBrewSim:cache_equipped_ratings()
     end
