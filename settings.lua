@@ -7,10 +7,9 @@
 --
 local name, SimpleBrewSim = ...;
 
-
+--- Minimize table usage
 SimpleBrewSim.Settings = {}
 SimpleBrewSim.Relics = {}
-SimpleBrewSim.Armour = {ARMOUR_TYPES={} }
 ---SimpleBrewSim.Gems = {}
 ---Saber's Eye of Agility
 ---Versatile Maelstrom Sapphire
@@ -18,6 +17,7 @@ SimpleBrewSim.Armour = {ARMOUR_TYPES={} }
 ---Quick Dawnlight
 ---Masterful Shadowruby
 SimpleBrewSim.CACHED_TRAITS = {}
+SimpleBrewSim.ARMOUR_TYPES ={}
 -- rating values
 SimpleBrewSim.MASTERY = 400
 SimpleBrewSim.CRIT = 400
@@ -41,8 +41,9 @@ SimpleBrewSim.Relics.CONCORDANCE_ID = 239042
 SimpleBrewSim.Relics.FACE_PALM_ID = 213116
 SimpleBrewSim.Relics.OBSIDIAN_FIST_ID = 213051
 --Armor constants
-SimpleBrewSim.Armour.ARMOUR_TYPES[LE_ITEM_ARMOR_GENERIC]=true
-SimpleBrewSim.Armour.ARMOUR_TYPES[LE_ITEM_ARMOR_LEATHER]=true
+SimpleBrewSim.ARMOUR_TYPES['INVTYPE_CLOAK'] = true
+SimpleBrewSim.ARMOUR_TYPES[LE_ITEM_ARMOR_GENERIC]=true
+SimpleBrewSim.ARMOUR_TYPES[LE_ITEM_ARMOR_LEATHER]=true
 
 
 

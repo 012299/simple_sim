@@ -19,8 +19,7 @@ local function show_dps_change()
     if item_class ~= LE_ITEM_CLASS_ARMOR then
         return nil
     end
-
-    if not SimpleBrewSim.Armour.ARMOUR_TYPES[item_subclass] and equip_slot ~= 'INVTYPE_CLOAK' then
+    if not SimpleBrewSim.ARMOUR_TYPES[item_subclass] and not SimpleBrewSim.ARMOUR_TYPES[equip_slot] then
         print('Our unwanted armour subclass is: ',item_subclass)
         return nil
     end
