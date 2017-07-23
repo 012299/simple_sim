@@ -2,25 +2,26 @@ local name, SimpleBrewSim = ...;
 local lineAdded = false
 local is_active_spec = false
 local INV_TYPES = SimpleBrewSim.INV_TYPES
-local red_loss = .76
-local green_loss = .48
-local blue_loss = .63
+--- TOOLTIP COLOURS
+local red_loss = 0.760784314
+local green_loss = 0.482352941
+local blue_loss = 0.62745098
 local red_gain = 0
-local green_gain= 1
-local blue_gain = .51
+local green_gain = 1
+local blue_gain = 0.501960784
 
-local function calculate_dps_change(new_item_link, equipped_id)
 
-    local equipped_item_link = GetInventoryItemLink("player", equipped_id)
+local function calculate_dps_change(new_item_link, equipped_item_link)
+
     -- round number workaround
     --attempt to compare string with number
     local dps_value = SimpleBrewSim:compare_items(equipped_item_link, new_item_link) -- string to number
     --  print('dps value: ', dps_value)
     local dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 4), 3)
     if dps_value < 0 then
-        return "DPS loss: " .. dps_str_value .. "%", red_loss, blue_loss, green_loss
+        return "DPS loss: " .. dps_str_value .. "%", red_loss, green_loss, blue_loss
     end
-    return "DPS gain: " .. dps_str_value .. "%", red_gain, blue_gain, green_gain
+    return "DPS gain: " .. dps_str_value .. "%", red_gain,  green_gain, blue_gain
 end
 
 local function show_dps_change()
@@ -37,13 +38,15 @@ local function show_dps_change()
     end
 
     local equipped_id = INV_TYPES[equip_slot]
-    local dps_string, r,g,b = calculate_dps_change(new_item_link,equipped_id)
+    local equipped_item_link = GetInventoryItemLink("player", equipped_id)
+    local dps_string, r, g, b = calculate_dps_change(new_item_link, equipped_item_link)
 
     if equipped_id == INV_TYPES['INVTYPE_TRINKET'] or equipped_id == INV_TYPES['INVTYPE_FINGER'] then
-        -- get itemlimk for same slot, get name. Do regular calculation, add line with name to tooltip
-        -- do itemlink for slot+1, get name, do regular calculation.
+        -- get itemname for first item
+        local item_name = GetItemInfo(equipped_item_link)
+        dps_string = dps_string .. ' ('.. item_name .. ')'
     end
-    return dps_string,r,g,b
+    return dps_string, r, g, b
 end
 
 
