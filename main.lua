@@ -11,16 +11,14 @@ end ]] --
 -- Maybe add a 'do nothing if same item'
 local function show_dps_change()
     local new_item_link = select(2, GameTooltip:GetItem())
-    if not new_item_link then
+    if not new_item_link or IsEquippedItem(new_item_link) then
         return nil
     end
-
     local equip_slot, _, _, item_class, item_subclass = select(9, GetItemInfo(new_item_link))
     if item_class ~= LE_ITEM_CLASS_ARMOR then
         return nil
     end
     if not SimpleBrewSim.ARMOUR_TYPES[item_subclass] and not SimpleBrewSim.ARMOUR_TYPES[equip_slot] then
-        print('Our unwanted armour subclass is: ',item_subclass)
         return nil
     end
     local equipped_id = SimpleBrewSim.INV_TYPES[equip_slot]
@@ -33,9 +31,6 @@ local function show_dps_change()
         return nil
     end
     local equipped_item_link = GetInventoryItemLink("player", equipped_id)
-    if new_item_link == equipped_item_link then
-        print('woah same item')
-    end
     -- round number workaround
     --attempt to compare string with number
     local dps_value = SimpleBrewSim:compare_items(equipped_item_link, new_item_link) -- string to number

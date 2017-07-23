@@ -9,12 +9,12 @@ end
 
 function SimpleBrewSim:ARTIFACT_TRAITS_CHANGED()
     SimpleBrewSim:cache_traits()
-    SimpleBrewSim:cache_base_stats()
+    SimpleBrewSim:calculate_conc_vers()
 end
 
 function SimpleBrewSim:ARTIFACT_ADDED()
     SimpleBrewSim:cache_traits()
-    SimpleBrewSim:cache_base_stats()
+    SimpleBrewSim:calculate_conc_vers()
 end
 
 function SimpleBrewSim:get_traits(spellIDs)

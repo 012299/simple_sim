@@ -8,45 +8,43 @@
 local name, SimpleBrewSim = ...;
 
 --- Minimize table usage
-SimpleBrewSim.Settings = {}
-SimpleBrewSim.Relics = {}
 ---SimpleBrewSim.Gems = {}
 ---Saber's Eye of Agility
 ---Versatile Maelstrom Sapphire
 ---Deadly Eye of Prophecy
 ---Quick Dawnlight
 ---Masterful Shadowruby
+--- TABLES
 SimpleBrewSim.CACHED_TRAITS = {}
 SimpleBrewSim.ARMOUR_TYPES ={}
--- rating values
+--- RATING VALUES values
 SimpleBrewSim.MASTERY = 400
 SimpleBrewSim.CRIT = 400
 SimpleBrewSim.HASTE = 375
 SimpleBrewSim.VERS = 475
--- Fight settings
-SimpleBrewSim.Settings.BASE_CONC = 4000
-SimpleBrewSim.Settings.CONC_INCREASE = 300
-SimpleBrewSim.Settings.CONC_UPTIME = 20 / 60
-SimpleBrewSim.Settings.FIGHT_LENGHT = 300 -- used for BL
-SimpleBrewSim.Settings.RELEVANT_FIGHT_LENGTH = (SimpleBrewSim.Settings.FIGHT_LENGHT - 40) / SimpleBrewSim.Settings.FIGHT_LENGHT -- starvation during BL doesn't occur, haste is worthless during BL
-SimpleBrewSim.Settings.BOB_CD = 90
-SimpleBrewSim.Settings.EK_CD = 75
-SimpleBrewSim.Settings.BASE_REGEN = 10
-SimpleBrewSim.Settings.KS_COST = 40
-SimpleBrewSim.Settings.TP_COST = 25
-SimpleBrewSim.Settings.BOS_DMG = {TWO_TP=0,THREE_TP=0.266173880000277} --chest/shoulder support
--- Relic vars
-SimpleBrewSim.Relics.OSF_MOD = 0.03
-SimpleBrewSim.Relics.CONCORDANCE_ID = 239042
-SimpleBrewSim.Relics.FACE_PALM_ID = 213116
-SimpleBrewSim.Relics.OBSIDIAN_FIST_ID = 213051
---Armor constants
+
+--- FIGHT SETTINGS
+SimpleBrewSim.FIGHT_LENGHT = 300 -- used for BL
+SimpleBrewSim.RELEVANT_FIGHT_LENGTH = (SimpleBrewSim.FIGHT_LENGHT - 40) / SimpleBrewSim.FIGHT_LENGHT -- starvation during BL doesn't occur, haste is worthless during BL
+--- ABILITY SETTINGS
+SimpleBrewSim.BASE_CONC = 4000
+SimpleBrewSim.CONC_INCREASE = 300
+SimpleBrewSim.CONC_UPTIME = 20 / 60
+SimpleBrewSim.BOB_CD = 90
+SimpleBrewSim.EK_CD = 75
+SimpleBrewSim.BASE_REGEN = 10
+SimpleBrewSim.KS_COST = 40
+SimpleBrewSim.TP_COST = 25
+SimpleBrewSim.BOS_DMG = {TWO_TP=0,THREE_TP=0.266173880000277} --chest/shoulder support
+--- RELIC IDS
+SimpleBrewSim.OBSIDIAN_FIST_MOD = 0.03
+SimpleBrewSim.CONCORDANCE_ID = 239042
+SimpleBrewSim.FACE_PALM_ID = 213116
+SimpleBrewSim.OBSIDIAN_FIST_ID = 213051
+---ARMOUR IDS
 SimpleBrewSim.ARMOUR_TYPES['INVTYPE_CLOAK'] = true
 SimpleBrewSim.ARMOUR_TYPES[LE_ITEM_ARMOR_GENERIC]=true
 SimpleBrewSim.ARMOUR_TYPES[LE_ITEM_ARMOR_LEATHER]=true
-
-
-
 
 
 --Armorslot constants because blizz is dumb

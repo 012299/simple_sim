@@ -11,8 +11,7 @@ local equipped_ratings = {}
 local crit_adjust = 0
 local stat_delta = {}
 local new_stats = {}
-local relic_list = SimpleBrewSim:create_set({ SimpleBrewSim.Relics.CONCORDANCE_ID, SimpleBrewSim.Relics.FACE_PALM_ID, SimpleBrewSim.Relics.OBSIDIAN_FIST_ID })
-local haste_value = 0
+local relic_list = SimpleBrewSim:create_set({ SimpleBrewSim.CONCORDANCE_ID, SimpleBrewSim.FACE_PALM_ID, SimpleBrewSim.OBSIDIAN_FIST_ID })
 -- Caching functions
 function SimpleBrewSim:cache_base_stats()
     base_stats.agi = select(2, UnitStat("player", 2)) - select(3, UnitStat("player", 2)) --most likely not needed
@@ -20,13 +19,14 @@ function SimpleBrewSim:cache_base_stats()
     base_stats.crit = SimpleBrewSim:round(GetCritChance() - GetCombatRatingBonus(CR_CRIT_MELEE), 2)
     base_stats.haste = SimpleBrewSim:round(GetHaste() - GetCombatRatingBonus(CR_HASTE_MELEE), 2)
     -- no round for conc vers
-    base_stats.vers = SimpleBrewSim:CalculateConcVers() / 475
+    self.calculate_conc_vers()
+    --base_stats.vers = SimpleBrewSim:CalculateConcVers() / 475
     --base_stats.vers = SimpleBrewSim:round(SimpleBrewSim:CalculateConcVers() / 475, 2)
 end
 
 function SimpleBrewSim:cache_traits()
     SimpleBrewSim.CACHED_TRAITS = SimpleBrewSim:get_traits(relic_list)
-    crit_adjust = SimpleBrewSim.CACHED_TRAITS[SimpleBrewSim.Relics.OBSIDIAN_FIST_ID] * SimpleBrewSim.Relics.OSF_MOD * SimpleBrewSim.Settings.BOS_DMG.THREE_TP
+    crit_adjust = SimpleBrewSim.CACHED_TRAITS[SimpleBrewSim.OBSIDIAN_FIST_ID] or 0 * SimpleBrewSim.OBSIDIAN_FIST_MOD * SimpleBrewSim.BOS_DMG.THREE_TP
 end
 
 -- Gets calculated whenever gear changes
@@ -39,19 +39,15 @@ function SimpleBrewSim:cache_equipped_ratings()
     equipped_ratings.vers = GetCombatRating(CR_VERSATILITY_DAMAGE_DONE)
 end
 
-function SimpleBrewSim:CalculateConcVers()
-    local conc_rank = SimpleBrewSim.CACHED_TRAITS[SimpleBrewSim.Relics.CONCORDANCE_ID] or 0
+function SimpleBrewSim:calculate_conc_vers()
+    local conc_rank = SimpleBrewSim.CACHED_TRAITS[SimpleBrewSim.CONCORDANCE_ID] or 0
 
     local base_vers = 0
     if conc_rank > 0 then
-        base_vers = SimpleBrewSim.Settings.BASE_CONC
-        conc_rank = conc_rank - 1
-        for i = conc_rank, 1, -1 do
-            base_vers = base_vers + SimpleBrewSim.Settings.CONC_INCREASE
-        end
-        base_vers = base_vers * SimpleBrewSim.Settings.CONC_UPTIME
+        base_vers = SimpleBrewSim.BASE_CONC + (conc_rank-1) * SimpleBrewSim.CONC_INCREASE * SimpleBrewSim.CONC_UPTIME / SimpleBrewSim.VERS
+        print('vers conc: ',base_vers)
     end
-    return base_vers
+    base_stats.vers = base_vers
 end
 
 -- called when comparing items
@@ -77,7 +73,7 @@ end
 
 -- #TODO move OSF mod to rotations, support for multiple rotations
 function SimpleBrewSim:calculate_stat_score(stats)
-    haste_value = SimpleBrewSim:calc_haste_val_3tp(stats['haste'])
+    local haste_value = SimpleBrewSim:calc_haste_val_3tp(stats['haste'])
 --[[
     print('agi ', stats['agi'])
     print('mastery: ', (1 + (stats['mastery'] / SimpleBrewSim.MASTERY + base_stats.mastery) / 100))
