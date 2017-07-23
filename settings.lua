@@ -10,7 +10,13 @@ local name, SimpleBrewSim = ...;
 
 SimpleBrewSim.Settings = {}
 SimpleBrewSim.Relics = {}
-SimpleBrewSim.Armour = {ARMOUR_TYPES={}}
+SimpleBrewSim.Armour = {ARMOUR_TYPES={} }
+---SimpleBrewSim.Gems = {}
+---Saber's Eye of Agility
+---Versatile Maelstrom Sapphire
+---Deadly Eye of Prophecy
+---Quick Dawnlight
+---Masterful Shadowruby
 SimpleBrewSim.CACHED_TRAITS = {}
 -- rating values
 SimpleBrewSim.MASTERY = 400
@@ -36,7 +42,7 @@ SimpleBrewSim.Relics.FACE_PALM_ID = 213116
 SimpleBrewSim.Relics.OBSIDIAN_FIST_ID = 213051
 --Armor constants
 SimpleBrewSim.Armour.ARMOUR_TYPES[LE_ITEM_ARMOR_GENERIC]=true
-SimpleBrewSim.Armour.ARMOUR_TYPES[LE_ITEM_ARMOR_LEATHER]=true  -- #TODO localisation GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR)
+SimpleBrewSim.Armour.ARMOUR_TYPES[LE_ITEM_ARMOR_LEATHER]=true
 
 
 

@@ -34,6 +34,9 @@ local function show_dps_change()
         return nil
     end
     local equipped_item_link = GetInventoryItemLink("player", equipped_id)
+    if new_item_link == equipped_item_link then
+        print('woah same item')
+    end
     -- round number workaround
     --attempt to compare string with number
     local dps_value = SimpleBrewSim:compare_items(equipped_item_link, new_item_link) -- string to number

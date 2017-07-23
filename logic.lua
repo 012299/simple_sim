@@ -64,13 +64,15 @@ function SimpleBrewSim:compare_items(equipped_item, new_item)
 end
 
 function SimpleBrewSim:calculate_gear_delta(equipped_item, new_item)
+    -- if new item has a gem, get stat and add it to new stats
+    -- if old item has a gem, get stat and remove it from new stats
+    wipe(stat_delta)
     GetItemStatDelta(new_item, equipped_item, stat_delta)
     new_stats.agi = equipped_ratings['agi'] + SimpleBrewSim:get_delta(stat_delta, 'ITEM_MOD_AGILITY_SHORT')
     new_stats.mastery = equipped_ratings['mastery'] + SimpleBrewSim:get_delta(stat_delta, 'ITEM_MOD_MASTERY_RATING_SHORT')
     new_stats.crit = equipped_ratings['crit'] + SimpleBrewSim:get_delta(stat_delta, 'ITEM_MOD_CRIT_RATING_SHORT')
     new_stats.haste = equipped_ratings['haste'] + SimpleBrewSim:get_delta(stat_delta, 'ITEM_MOD_HASTE_RATING_SHORT')
     new_stats.vers = equipped_ratings['vers'] + SimpleBrewSim:get_delta(stat_delta, 'ITEM_MOD_VERSATILITY')
-    wipe(stat_delta)
 end
 
 -- #TODO move OSF mod to rotations, support for multiple rotations
