@@ -22,7 +22,7 @@ local function calculate_dps_change(tooltip, new_item_link, equipped_id)
     -- round number workaround
     --attempt to compare string with number
     local dps_value = SimpleBrewSim:compare_items(equipped_item_link, new_item_link) -- string to number
-    local dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 4), 3)
+    local dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 3), 2)
     if dps_value > 0 then
         dps_change, r, g, b, r2, g2, b2 = dps_gain_text, red_gain, green_gain, blue_gain, red_loss, green_loss, blue_loss
     end
