@@ -7,13 +7,13 @@
 --
 local name, SimpleBrewSim = ...;
 
---- Minimize table usage
----SimpleBrewSim.Gems = {}
----Saber's Eye of Agility
----Versatile Maelstrom Sapphire
----Deadly Eye of Prophecy
----Quick Dawnlight
----Masterful Shadowruby
+--- GEMS
+SimpleBrewSim['Saber\'s Eye of Agility'] = {'agi', 200 }
+SimpleBrewSim['Versatile Maelstrom Sapphire'] = {'vers', 150}
+SimpleBrewSim['Deadly Eye of Prophecy'] = {crit, 150}
+SimpleBrewSim['Quick Dawnlight'] = {'haste',150}
+SimpleBrewSim['Masterful Shadowruby'] = {'mastery', 150}
+---
 --- TABLES
 SimpleBrewSim.CACHED_TRAITS = {}
 SimpleBrewSim.ARMOUR_TYPES ={}
@@ -42,10 +42,12 @@ SimpleBrewSim.CONCORDANCE_ID = 239042
 SimpleBrewSim.FACE_PALM_ID = 213116
 SimpleBrewSim.OBSIDIAN_FIST_ID = 213051
 ---ARMOUR IDS
+SimpleBrewSim.ARMOUR_TYPES = {['INVTYPE_CLOAK'] = true, [LE_ITEM_ARMOR_GENERIC]=true, [LE_ITEM_ARMOR_LEATHER]=true }
+--[[
 SimpleBrewSim.ARMOUR_TYPES['INVTYPE_CLOAK'] = true
 SimpleBrewSim.ARMOUR_TYPES[LE_ITEM_ARMOR_GENERIC]=true
 SimpleBrewSim.ARMOUR_TYPES[LE_ITEM_ARMOR_LEATHER]=true
-
+]]--
 
 --Armorslot constants because blizz is dumb
 -- Maps between INVTYPEs and slot IDs
