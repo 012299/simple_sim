@@ -26,8 +26,6 @@ local function calculate_gear_delta(equipped_item, new_item)
     if gems ~= 0 then
         local stat_adjust = gems < 0 and -1 or 1
         local item_to_use = stat_adjust == -1 and equipped_item or new_item
-        print('sometest')
-        print(stat_adjust, item_to_use)
         for i = 1, math.abs(gems), 1 do
             local gem_name = GetItemGem(item_to_use, i)
             local gem_info = SimpleBrewSim[gem_name] -- deal with old gems or sockets
