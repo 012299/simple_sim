@@ -9,20 +9,21 @@ local blue_loss = 0.62745098
 local red_gain = 0
 local green_gain = 1
 local blue_gain = 0.501960784
-
+local dps_gain_text = 'gain: '
+local dps_loss_text = 'loss: '
 
 local function calculate_dps_change(tooltip, new_item_link, equipped_id)
 
     local equipped_item_link = GetInventoryItemLink("player", equipped_id)
     local item_name = GetItemInfo(equipped_item_link)
-    local dps_change = 'loss: '
+    local dps_change = dps_loss_text
     local r, g, b, r2,g2,b2 = red_loss,green_loss,blue_loss,red_gain,green_gain,blue_gain
     -- round number workaround
     --attempt to compare string with number
     local dps_value = SimpleBrewSim:compare_items(equipped_item_link, new_item_link) -- string to number
     local dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 4), 3)
     if dps_value > 0 then
-        dps_change, r, g, b,r2,g2,b2 = "gain: ", red_gain, green_gain, blue_gain, red_loss,green_loss,blue_loss
+        dps_change, r, g, b,r2,g2,b2 = dps_gain_text, red_gain, green_gain, blue_gain, red_loss,green_loss,blue_loss
     end
     tooltip:AddDoubleLine("DPS "..dps_change..dps_str_value.."% ", "("..item_name..")", r, g, b,r2,g2,b2) --#TODO look into string concat
 
