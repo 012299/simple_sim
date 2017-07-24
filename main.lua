@@ -12,8 +12,7 @@ local blue_gain = 0.501960784
 local dps_gain_text = 'gain: '
 local dps_loss_text = 'loss: '
 local LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_ARMOR
-local GetItemInfo = GetItemInfo
-local GetInventoryItemLink = GetInventoryItemLink
+local ARMOUR_TYPES = SimpleBrewSim.ARMOUR_TYPES
 
 
 local function calculate_dps_change(tooltip, new_item_link, equipped_id)
@@ -41,7 +40,7 @@ local function show_dps_change(tooltip)
     if item_class ~= LE_ITEM_CLASS_ARMOR then
         return
     end
-    if not SimpleBrewSim.ARMOUR_TYPES[item_subclass] and not SimpleBrewSim.ARMOUR_TYPES[equip_slot] then
+    if not ARMOUR_TYPES[item_subclass] and not ARMOUR_TYPES[equip_slot] then
         return
     end
 
