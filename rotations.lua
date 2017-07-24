@@ -5,27 +5,32 @@
 Energy requirement to be able to start a cycle and cast the first TP
  ]]
 local name, SimpleBrewSim = ...;
-
-
+local BOB_CD = SimpleBrewSim.BOB_CD
+local HASTE = SimpleBrewSim.HASTE
+local BASE_REGEN = SimpleBrewSim.BASE_REGEN
+local EK_CD = SimpleBrewSim.EK_CD
+local KS_COST = SimpleBrewSim.KS_COST
+local TP_COST = SimpleBrewSim.TP_COST
+local RELEVANT_FIGHT_LENGTH = SimpleBrewSim.RELEVANT_FIGHT_LENGTH
+local FACE_PALM_ID = SimpleBrewSim.FACE_PALM_ID
 
 -- TODO #arcway necklace support etc
-local function calculate_downtime(haste, energy_out, duration, bob_cd)
-    local haste_perc = haste / SimpleBrewSim.HASTE
-    local energy_regen = SimpleBrewSim.BASE_REGEN * (1 + haste_perc / 100)
+local function calculate_downtime(haste, energy_out, duration, bob_cd,ek_adjust)
+    local haste_perc = haste / HASTE
+    local energy_regen = BASE_REGEN * (1 + haste_perc / 100)
     local energy = UnitPowerMax("player")
     local energy_in = energy_regen * duration
     local energy_diff = energy_out - energy_in
     local energy_def = 0
-    local ek_adjust = bob_cd / SimpleBrewSim.EK_CD -- EK on cd for max dps, filling a gcd with EK gives time to regen energy. For average downtime calculation, use average EK cast
     for i = duration, bob_cd, duration do -- redo this properly at some point
         energy = energy - energy_diff
-        if energy < SimpleBrewSim.KS_COST then
-            energy_def = SimpleBrewSim.KS_COST - energy
-            energy_def = SimpleBrewSim.TP_COST - 2 * energy_regen + energy_def -- TP energy requirement
+        if energy < KS_COST then
+            energy_def = KS_COST - energy
+            energy_def = TP_COST - 2 * energy_regen + energy_def -- TP energy requirement
         end
     end
     local downtime_seconds = energy_def/energy_regen-ek_adjust
-    local downtime = (downtime_seconds) / (bob_cd+downtime_seconds+ek_adjust) * SimpleBrewSim.RELEVANT_FIGHT_LENGTH
+    local downtime = (downtime_seconds) / (bob_cd+downtime_seconds+ek_adjust) * RELEVANT_FIGHT_LENGTH
 
     if downtime < 0 then
         return 1
@@ -33,13 +38,15 @@ local function calculate_downtime(haste, energy_out, duration, bob_cd)
     return 1 - downtime
 end
 function SimpleBrewSim:calc_haste_val_3tp(haste)
-    local fp_ranks = SimpleBrewSim.CACHED_TRAITS[SimpleBrewSim.FACE_PALM_ID]
+    local fp_ranks = SimpleBrewSim.CACHED_TRAITS[FACE_PALM_ID]
     local rotation_duration = 9
     local energy_out = 115
     local brew_reduction_cycle = 4.8 + 3 + (3 * .1 * fp_ranks) + rotation_duration -- 3 tps, 1 KS
     local brew_gen_sec = brew_reduction_cycle / rotation_duration
-    local bob_cd = math.floor(SimpleBrewSim.BOB_CD / brew_gen_sec/rotation_duration)*rotation_duration +3 --Energy starvation only occurs during the first 3 casts (ks/tp) of a cycle if that cycle has to be started without BoB up
-    return calculate_downtime(haste, energy_out, rotation_duration, bob_cd)
+    local bob_cd = BOB_CD / brew_gen_sec
+    local ek_adjust = bob_cd / EK_CD -- EK isn't 'required' every 'adjusted_bob_cd' time, but every bob_cast
+    bob_cd = math.floor(bob_cd/rotation_duration)*rotation_duration +3 --Energy starvation only occurs during the first 3 casts (ks/tp) of a cycle if that cycle has to be started without BoB up
+    return calculate_downtime(haste, energy_out, rotation_duration, bob_cd,ek_adjust)
 end
 
 
