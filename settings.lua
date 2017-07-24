@@ -35,7 +35,7 @@ SimpleBrewSim.EK_CD = 75
 SimpleBrewSim.BASE_REGEN = 10
 SimpleBrewSim.KS_COST = 40
 SimpleBrewSim.TP_COST = 25
-SimpleBrewSim.BOS_DMG = {TWO_TP=0,THREE_TP=0.266173880000277} --chest/shoulder support
+SimpleBrewSim.BOS_DMG = {TWO_TP=0,THREE_TP=0.266173880000277} -- #TODO chest/shoulder support
 --- RELIC IDS
 SimpleBrewSim.OBSIDIAN_FIST_MOD = 0.03
 SimpleBrewSim.CONCORDANCE_ID = 239042
