@@ -39,11 +39,13 @@ end
 -- #TODO move OSF mod to rotations, support for multiple rotations
 local function calculate_stat_score(stats)
     local haste_value = SimpleBrewSim:calc_haste_val_3tp(stats['haste'])
+--[[
     print('agi ', stats['agi'])
     print('mastery: ', (1 + (stats['mastery'] / SimpleBrewSim.MASTERY + base_stats.mastery) / 100))
     print('crit: ', (1 + (stats['crit'] / SimpleBrewSim.CRIT + base_stats.crit) / 100 + crit_adjust))
     print('vers: ', (1 + (stats['vers'] / SimpleBrewSim.VERS + base_stats.vers) / 100))
     print('haste: ', haste_value)
+    ]]--
     return stats['agi'] * (1 + (stats['mastery'] / SimpleBrewSim.MASTERY + base_stats.mastery) * .01) * (1 + (stats['crit'] / SimpleBrewSim.CRIT + base_stats.crit) * .01 + crit_adjust) * (1 + (stats['vers'] / SimpleBrewSim.VERS + base_stats.vers) * .01) * haste_value
 end
 

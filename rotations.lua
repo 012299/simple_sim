@@ -1,4 +1,3 @@
-
 -- 3tp energy calculations
 --[[ 3tp rotation, 9 casts per cycle
 4.8 sec KS reduction (recursive stave off not reliable enough for average brew reduction)
@@ -15,38 +14,57 @@ local RELEVANT_FIGHT_LENGTH = SimpleBrewSim.RELEVANT_FIGHT_LENGTH
 local FACE_PALM_ID = SimpleBrewSim.FACE_PALM_ID
 
 -- TODO #arcway necklace support etc
-local function calculate_downtime(haste, energy_out, duration, bob_cd,ek_adjust)
+local function calculate_downtime(haste, energy_out, duration, bob_cd, energy_out_ek)
     local haste_perc = haste / HASTE
     local energy_regen = BASE_REGEN * (1 + haste_perc / 100)
-    local energy = UnitPowerMax("player")
     local energy_in = energy_regen * duration
     local energy_diff = energy_out - energy_in
+    local ek_adjust = bob_cd / EK_CD
+    --- EK energy profile adjustment
+    local energy_in_ek = energy_in - energy_regen -- 8sec rotation instead of 9, redo later for 2tp support #TODO
+    print('energy_in: ', energy_in, 'energy_in_ek: ', energy_in_ek)
+    local energy_diff_ek = energy_diff - (energy_out_ek - energy_in_ek)
+    print('energy_diff_ek, ', energy_diff_ek)
+    local energy = UnitPowerMax("player") + energy_diff_ek * ek_adjust
+    print('energy_adjust = ', energy)
+    print('duration, ', duration, ' bob_cd, ', bob_cd)
+    --- i = duration, energy cost is calculated after the first cycle
+    --- bob_cd - duration -> only need enough energy to start the last cycle, not to actually finish it
     local energy_def = 0
-    for i = duration, bob_cd, duration do -- redo this properly at some point
+    for i = duration, bob_cd, duration do -- redo this properly at some point bob_cd  - duration
+        print('bob_cd i ', i)
         energy = energy - energy_diff
         if energy < KS_COST then
+            print('<KS_COST')
             energy_def = KS_COST - energy
             energy_def = TP_COST - 2 * energy_regen + energy_def -- TP energy requirement
+            print('cycle: ', i, ' energy_def: ', energy_def)
         end
     end
-    local downtime_seconds = energy_def/energy_regen-ek_adjust
-    local downtime = (downtime_seconds) / (bob_cd+downtime_seconds+ek_adjust) * RELEVANT_FIGHT_LENGTH
+    local downtime_seconds = energy_def / energy_regen -- - ek_adjust
+    local downtime = downtime_seconds / (bob_cd + downtime_seconds - ek_adjust) * RELEVANT_FIGHT_LENGTH
 
-    if downtime < 0 then
-        return 1
-    end
-    return 1 - downtime
+    return downtime < 0 and 1 or (1 - downtime)
 end
+
 function SimpleBrewSim:calc_haste_val_3tp(haste)
     local fp_ranks = SimpleBrewSim.CACHED_TRAITS[FACE_PALM_ID]
     local rotation_duration = 9
     local energy_out = 115
+    local energy_out_adjust = 90
     local brew_reduction_cycle = 4.8 + 3 + (3 * .1 * fp_ranks) + rotation_duration -- 3 tps, 1 KS
     local brew_gen_sec = brew_reduction_cycle / rotation_duration
-    local bob_cd = BOB_CD / brew_gen_sec
-    local ek_adjust = bob_cd / EK_CD -- EK isn't 'required' every 'adjusted_bob_cd' time, but every bob_cast
-    bob_cd = math.floor(bob_cd/rotation_duration)*rotation_duration +3 --Energy starvation only occurs during the first 3 casts (ks/tp) of a cycle if that cycle has to be started without BoB up
-    return calculate_downtime(haste, energy_out, rotation_duration, bob_cd,ek_adjust)
+    local bob_cd = math.floor(BOB_CD / brew_gen_sec / rotation_duration) * rotation_duration + 3 --Energy starvation only occurs during the first 3 casts (ks/tp) of a cycle if that cycle has to be started without BoB up
+    --local bob_cd = math.ceil(BOB_CD / brew_gen_sec / 9) * 9
+    --[[
+        local bob_cd = BOB_CD / brew_gen_sec
+        print('bob_cd_p, ', bob_cd)
+        local ek_adjust = bob_cd / EK_CD -- EK isn't 'required' every 'adjusted_bob_cd' time, but every bob_cast
+        print('ek_adjust, ', ek_adjust)
+
+    local bob_cd = math.floor(bob_cd / rotation_duration) * rotation_duration + 3 --Energy starvation only occurs during the first 3 casts (ks/tp) of a cycle if that cycle has to be started without BoB up
+        print('bob_cd_a, ', bob_cd)]] --
+    return calculate_downtime(haste, energy_out, rotation_duration, bob_cd, energy_out_adjust)
 end
 
 

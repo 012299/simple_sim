@@ -11,11 +11,14 @@ local green_gain = 1
 local blue_gain = 0.501960784
 local dps_gain_text = 'gain: '
 local dps_loss_text = 'loss: '
+local LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_ARMOR
+local GetItemInfo = GetItemInfo
+local GetInventoryItemLink = GetInventoryItemLink
 
 
 local function calculate_dps_change(tooltip, new_item_link, equipped_id)
     local equipped_item_link = GetInventoryItemLink("player", equipped_id)
-    if equipped_item_link == new_item_link then return end
+    if not equipped_item_link or equipped_item_link == new_item_link  then return end
     local item_name = GetItemInfo(equipped_item_link)
     local dps_change = dps_loss_text
     local r, g, b, r2, g2, b2 = red_loss, green_loss, blue_loss, red_gain, green_gain, blue_gain
@@ -30,7 +33,7 @@ local function calculate_dps_change(tooltip, new_item_link, equipped_id)
 end
 
 local function show_dps_change(tooltip)
-    local _, new_item_link = GameTooltip:GetItem()
+    local _, new_item_link = tooltip:GetItem()
     if not new_item_link then
         return
     end
