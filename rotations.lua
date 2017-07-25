@@ -29,10 +29,9 @@ local function calculate_downtime(haste, energy_out, duration, bob_cd)
             energy_def = TP_COST - 2 * energy_regen + energy_def -- TP energy requirement
         end
     end
-    --ek_adjust = .39--0.416632531328
-    bob_cd = 45
+    ek_adjust = 0.416632531328 --.39 --- redo later
     local downtime_seconds = energy_def / energy_regen - ek_adjust
-    local downtime = downtime_seconds / (bob_cd + downtime_seconds + ek_adjust) * RELEVANT_FIGHT_LENGTH * 0.7958719629 -- .8012164064
+    local downtime = downtime_seconds / (bob_cd + downtime_seconds + ek_adjust) * RELEVANT_FIGHT_LENGTH * 0.7958719629 --Downtime usually delays KS (which in turn delays BoS), and TP. ~.79% is the portion of KS/BoS/TP damage -- .8012164064
 
 
     return downtime < 0 and 1 or (1 - downtime)

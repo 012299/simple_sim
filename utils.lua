@@ -16,14 +16,15 @@ function SimpleBrewSim:ARTIFACT_ADDED(event, artifactID)
     if artifactID ~= brew_ID then
         return
     end
+    print('artifact added')
     SimpleBrewSim:cache_traits()
 end
 
 function SimpleBrewSim:get_traits(spellIDs)
-    local _, traits = LAD:GetArtifactTraits()
+    local _, traits = LAD:GetArtifactTraits(brew_ID)
     if not traits then
         LAD:ForceUpdate()
-        _, traits = LAD:GetArtifactTraits()
+        _, traits = LAD:GetArtifactTraits(brew_ID)
     end
     local return_list = {}
     if not traits then

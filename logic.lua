@@ -76,6 +76,7 @@ function SimpleBrewSim:cache_traits()
     SimpleBrewSim.CACHED_TRAITS = SimpleBrewSim:get_traits(relic_list)
     -- calculate crit adjustment, other stats are slightly more valuable than crit due to BoS base crit.
     crit_adjust = (SimpleBrewSim.CACHED_TRAITS[SimpleBrewSim.OBSIDIAN_FIST_ID] or 0) * SimpleBrewSim.OBSIDIAN_FIST_MOD * SimpleBrewSim.BOS_DMG.THREE_TP
+    print('caching traits')
     calculate_conc_vers()
 end
 
