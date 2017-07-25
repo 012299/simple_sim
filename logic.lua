@@ -14,7 +14,7 @@ local new_stats = {}
 local relic_list = SimpleBrewSim:create_set({ SimpleBrewSim.CONCORDANCE_ID, SimpleBrewSim.FACE_PALM_ID, SimpleBrewSim.OBSIDIAN_FIST_ID })
 local MASTERY = 1 / SimpleBrewSim.MASTERY
 local CRIT = 1 / SimpleBrewSim.CRIT
-local VERS = 1/ SimpleBrewSim.VERS
+local VERS = 1 / SimpleBrewSim.VERS
 
 local function calculate_gear_delta(equipped_item, new_item)
     wipe(stat_delta)
@@ -42,14 +42,15 @@ end
 -- #TODO move OSF mod to rotations, support for multiple rotations
 local function calculate_stat_score(stats)
     local haste_value = SimpleBrewSim:calc_haste_val_3tp(stats['haste']) --#TODO base haste
---[[
-    print('agi ', stats['agi'])
-    print('mastery: ', (1 + (stats['mastery'] / SimpleBrewSim.MASTERY + base_stats.mastery) / 100))
-    print('crit: ', (1 + (stats['crit'] / SimpleBrewSim.CRIT + base_stats.crit) / 100))
-    print('vers: ', (1 + (stats['vers'] / SimpleBrewSim.VERS ) / 100))
-    print('haste: ', haste_value)
-]]--
-    return stats['agi'] * (1 + (stats['mastery'] *MASTERY + base_stats.mastery) * .01) * (1 + (stats['crit'] *CRIT + base_stats.crit) * .01 + crit_adjust) * (1 + (stats['vers'] * VERS + base_stats.vers) * .01) * haste_value
+    --[[
+        print('agi ', stats['agi'])
+        print('mastery: ', (1 + (stats['mastery'] / SimpleBrewSim.MASTERY + base_stats.mastery) / 100))
+        print('crit: ', (1 + (stats['crit'] / SimpleBrewSim.CRIT + base_stats.crit) / 100))
+        print('vers: ', (1 + (stats['vers'] / SimpleBrewSim.VERS ) / 100))
+        print('haste: ', haste_value)
+    ]] --
+    --- BoS crit is average, but only average with 100% uptime
+    return stats['agi'] * (1 + (stats['mastery'] * MASTERY + base_stats.mastery) * .01) * (1 + (stats['crit'] * CRIT + base_stats.crit) * .01 + crit_adjust*haste_value) * (1 + (stats['vers'] * VERS + base_stats.vers) * .01) * haste_value
 end
 
 local function calculate_conc_vers()
