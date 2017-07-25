@@ -8,7 +8,6 @@ function SimpleBrewSim:create_set(list)
 end
 
 function SimpleBrewSim:ARTIFACT_TRAITS_CHANGED()
-    print('traits changed')
     SimpleBrewSim:cache_traits()
 end
 
@@ -16,7 +15,6 @@ function SimpleBrewSim:ARTIFACT_ADDED(event, artifactID)
     if artifactID ~= brew_ID then
         return
     end
-    print('artifact added')
     SimpleBrewSim:cache_traits()
 end
 

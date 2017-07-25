@@ -71,11 +71,9 @@ local function check_spec()
 end
 
 local frame, events = CreateFrame("FRAME", "SimpleBrewSimFrame"), {};
---function events:PLAYER_ENTERING_WORLD(...)end
 function events:PLAYER_SPECIALIZATION_CHANGED(...)
     check_spec()
     if is_active_spec then
-        print('player spec changed')
         SimpleBrewSim:cache_traits()
         SimpleBrewSim:cache_base_stats()
         SimpleBrewSim:cache_equipped_ratings()

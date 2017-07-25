@@ -2,7 +2,7 @@
 ## Title: SimpleBrewSim
 ## Author: Original Retard
 ## Version: 0.1
-## OptionalDeps: LibArtifactData-1.0
+## Dependencies: LibArtifactData-1.0
 settings.lua
 utils.lua
 rotations.lua

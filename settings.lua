@@ -43,11 +43,6 @@ SimpleBrewSim.FACE_PALM_ID = 213116
 SimpleBrewSim.OBSIDIAN_FIST_ID = 213051
 ---ARMOUR IDS
 SimpleBrewSim.ARMOUR_TYPES = {['INVTYPE_CLOAK'] = true, [LE_ITEM_ARMOR_GENERIC]=true, [LE_ITEM_ARMOR_LEATHER]=true }
---[[
-SimpleBrewSim.ARMOUR_TYPES['INVTYPE_CLOAK'] = true
-SimpleBrewSim.ARMOUR_TYPES[LE_ITEM_ARMOR_GENERIC]=true
-SimpleBrewSim.ARMOUR_TYPES[LE_ITEM_ARMOR_LEATHER]=true
-]]--
 
 --Armorslot constants because blizz is dumb
 -- Maps between INVTYPEs and slot IDs

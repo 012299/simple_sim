@@ -42,13 +42,6 @@ end
 -- #TODO move OSF mod to rotations, support for multiple rotations
 local function calculate_stat_score(stats)
     local haste_value = SimpleBrewSim:calc_haste_val_3tp(stats['haste']) --#TODO base haste
-    --[[
-        print('agi ', stats['agi'])
-        print('mastery: ', (1 + (stats['mastery'] / SimpleBrewSim.MASTERY + base_stats.mastery) / 100))
-        print('crit: ', (1 + (stats['crit'] / SimpleBrewSim.CRIT + base_stats.crit) / 100))
-        print('vers: ', (1 + (stats['vers'] / SimpleBrewSim.VERS ) / 100))
-        print('haste: ', haste_value)
-    ]] --
     --- BoS crit is average, but only average with 100% uptime
     return stats['agi'] * (1 + (stats['mastery'] * MASTERY + base_stats.mastery) * .01) * (1 + (stats['crit'] * CRIT + base_stats.crit) * .01 + crit_adjust*haste_value) * (1 + (stats['vers'] * VERS + base_stats.vers) * .01) * haste_value
 end
@@ -58,7 +51,6 @@ local function calculate_conc_vers()
     local base_vers = 0
     if conc_rank > 0 then
         base_vers = (SimpleBrewSim.BASE_CONC + (conc_rank - 1) * SimpleBrewSim.CONC_INCREASE) * SimpleBrewSim.CONC_UPTIME / SimpleBrewSim.VERS
-        print('vers conc: ', base_vers)
     end
     base_stats.vers = base_vers
 end
@@ -76,7 +68,6 @@ function SimpleBrewSim:cache_traits()
     SimpleBrewSim.CACHED_TRAITS = SimpleBrewSim:get_traits(relic_list)
     -- calculate crit adjustment, other stats are slightly more valuable than crit due to BoS base crit.
     crit_adjust = (SimpleBrewSim.CACHED_TRAITS[SimpleBrewSim.OBSIDIAN_FIST_ID] or 0) * SimpleBrewSim.OBSIDIAN_FIST_MOD * SimpleBrewSim.BOS_DMG.THREE_TP
-    print('caching traits')
     calculate_conc_vers()
 end
 
