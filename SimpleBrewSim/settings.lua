@@ -16,7 +16,6 @@ SimpleBrewSim['Masterful Shadowruby'] = {'mastery', 150}
 ---
 --- TABLES
 SimpleBrewSim.CACHED_TRAITS = {}
---SimpleBrewSim.ARMOUR_TYPES ={}
 --- RATING VALUES values #TODO change to support multiplication
 SimpleBrewSim.MASTERY = 400
 SimpleBrewSim.CRIT = 400
@@ -41,6 +40,7 @@ SimpleBrewSim.OBSIDIAN_FIST_MOD = 0.03
 SimpleBrewSim.CONCORDANCE_ID = 239042
 SimpleBrewSim.FACE_PALM_ID = 213116
 SimpleBrewSim.OBSIDIAN_FIST_ID = 213051
+SimpleBrewSim.GIFTED_STUDENT_ID = 213136
 ---ARMOUR IDS
 SimpleBrewSim.ARMOUR_TYPES = {['INVTYPE_CLOAK'] = true, [LE_ITEM_ARMOR_GENERIC]=true, [LE_ITEM_ARMOR_LEATHER]=true }
 

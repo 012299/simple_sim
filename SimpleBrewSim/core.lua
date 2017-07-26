@@ -15,6 +15,7 @@ local relic_list = SimpleBrewSim:create_set({ SimpleBrewSim.CONCORDANCE_ID, Simp
 local MASTERY = 1 / SimpleBrewSim.MASTERY
 local CRIT = 1 / SimpleBrewSim.CRIT
 local VERS = 1 / SimpleBrewSim.VERS
+local HASTE = 1 / SimpleBrewSim.HASTE
 
 local function calculate_gear_delta(equipped_item, new_item)
     wipe(stat_delta)
@@ -30,8 +31,8 @@ local function calculate_gear_delta(equipped_item, new_item)
         local item_to_use = stat_adjust == -1 and equipped_item or new_item
         for i = 1, math.abs(gems), 1 do
             local gem_name = GetItemGem(item_to_use, i)
-            local gem_info = SimpleBrewSim[gem_name] -- deal with old gems or sockets
-            if gem_info then
+            local gem_info = SimpleBrewSim[gem_name]
+            if gem_info then -- avoid non-legion gems for now
                 local stat, value = unpack(gem_info)
                 new_stats[stat] = new_stats[stat] + value * stat_adjust
             end
@@ -41,9 +42,9 @@ end
 
 -- #TODO move OSF mod to rotations, support for multiple rotations
 local function calculate_stat_score(stats)
-    local haste_value = SimpleBrewSim:calc_haste_val_3tp(stats['haste']) --#TODO base haste
+    local haste_adjust = SimpleBrewSim:calc_haste_val_3tp(stats['haste'] * HASTE + base_stats['haste'])
     --- BoS crit is average, but only average with 100% uptime
-    return stats['agi'] * (1 + (stats['mastery'] * MASTERY + base_stats.mastery) * .01) * (1 + (stats['crit'] * CRIT + base_stats.crit) * .01 + crit_adjust*haste_value) * (1 + (stats['vers'] * VERS + base_stats.vers) * .01) * haste_value
+    return stats['agi'] * (1 + (stats['mastery'] * MASTERY + base_stats.mastery) * .01) * (1 + (stats['crit'] * CRIT + base_stats.crit) * .01 + crit_adjust * haste_adjust) * (1 + (stats['vers'] * VERS + base_stats.vers) * .01) * haste_adjust
 end
 
 local function calculate_conc_vers()
@@ -56,17 +57,13 @@ local function calculate_conc_vers()
 end
 
 function SimpleBrewSim:cache_base_stats()
-    --base_stats.agi = select(2, UnitStat("player", 2)) - select(3, UnitStat("player", 2)) --most likely not needed
     base_stats.mastery = SimpleBrewSim:round(GetMastery() - GetCombatRatingBonus(CR_MASTERY), 2)
     base_stats.crit = SimpleBrewSim:round(GetCritChance() - GetCombatRatingBonus(CR_CRIT_MELEE), 2)
     base_stats.haste = SimpleBrewSim:round(GetHaste() - GetCombatRatingBonus(CR_HASTE_MELEE), 2)
-    -- no round for conc vers
-    --- self.calculate_conc_vers() #TODO might need to re-enable later, avoid running duplicate methods
 end
 
 function SimpleBrewSim:cache_traits()
     SimpleBrewSim.CACHED_TRAITS = SimpleBrewSim:get_traits(relic_list)
-    -- calculate crit adjustment, other stats are slightly more valuable than crit due to BoS base crit.
     crit_adjust = (SimpleBrewSim.CACHED_TRAITS[SimpleBrewSim.OBSIDIAN_FIST_ID] or 0) * SimpleBrewSim.OBSIDIAN_FIST_MOD * SimpleBrewSim.BOS_DMG.THREE_TP
     calculate_conc_vers()
 end

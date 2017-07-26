@@ -5,7 +5,6 @@ Energy requirement to be able to start a cycle and cast the first TP
  ]]
 local name, SimpleBrewSim = ...;
 local BOB_CD = SimpleBrewSim.BOB_CD
-local HASTE = SimpleBrewSim.HASTE
 local BASE_REGEN = SimpleBrewSim.BASE_REGEN
 local EK_CD = SimpleBrewSim.EK_CD
 local KS_COST = SimpleBrewSim.KS_COST
@@ -15,8 +14,7 @@ local FACE_PALM_ID = SimpleBrewSim.FACE_PALM_ID
 
 -- TODO #arcway necklace support etc
 local function calculate_downtime(haste, energy_out, duration, bob_cd)
-    local haste_perc = haste / HASTE
-    local energy_regen = BASE_REGEN * (1 + haste_perc / 100)
+    local energy_regen = BASE_REGEN * (1 + haste * .01)
     local energy = UnitPowerMax("player")
     local energy_in = energy_regen * duration
     local energy_diff = energy_out - energy_in
@@ -29,9 +27,10 @@ local function calculate_downtime(haste, energy_out, duration, bob_cd)
             energy_def = TP_COST - 2 * energy_regen + energy_def -- TP energy requirement
         end
     end
-    ek_adjust = 0.416632531328 --.39 --- redo later
+    local downtime_damage_perc =  0.7958719629
+    ek_adjust = ek_adjust* downtime_damage_perc--0.416632531328 --.39 --- redo later
     local downtime_seconds = energy_def / energy_regen - ek_adjust
-    local downtime = downtime_seconds / (bob_cd + downtime_seconds + ek_adjust) * RELEVANT_FIGHT_LENGTH * 0.7958719629 --Downtime usually delays KS (which in turn delays BoS), and TP. ~.79% is the portion of KS/BoS/TP damage -- .8012164064
+    local downtime = downtime_seconds / (bob_cd + downtime_seconds + ek_adjust) * RELEVANT_FIGHT_LENGTH * downtime_damage_perc --  .8012164064 --0.7958719629 --Downtime usually delays KS (which in turn delays BoS), and TP. ~.79% is the portion of KS/BoS/TP damage -- .8012164064
 
 
     return downtime < 0 and 1 or (1 - downtime)
@@ -52,5 +51,3 @@ end
 
 
 
---    local energy_requirement_points = math.abs((energy_def/starvation_cut_off)/ENERGY_PER_HASTE_POINT) --For later, when using weights etcRequired energy/second, energy regen needs to go up over the course of the fight in order to not starve
---local ENERGY_PER_HASTE_POINT = .01 / 375 * 10 --Energy regen granted by a single point of haste

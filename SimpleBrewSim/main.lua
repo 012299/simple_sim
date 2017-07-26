@@ -1,7 +1,11 @@
 local name, SimpleBrewSim = ...;
 local lineAdded = false
 local is_active_spec = false
+local BREW_SPEC_ID = 268
+--- Reduce table lookup
 local INV_TYPES = SimpleBrewSim.INV_TYPES
+local LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_ARMOR
+local ARMOUR_TYPES = SimpleBrewSim.ARMOUR_TYPES
 --- TOOLTIP COLOURS
 local red_loss = 0.760784314
 local green_loss = 0.482352941
@@ -11,8 +15,6 @@ local green_gain = 1
 local blue_gain = 0.501960784
 local dps_gain_text = 'gain: '
 local dps_loss_text = 'loss: '
-local LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_ARMOR
-local ARMOUR_TYPES = SimpleBrewSim.ARMOUR_TYPES
 
 
 local function calculate_dps_change(tooltip, new_item_link, equipped_id)
@@ -67,7 +69,7 @@ local function OnTooltipCleared(tooltip, ...)
 end
 
 local function check_spec()
-    is_active_spec = select(2, GetSpecializationInfo(GetSpecialization(), nil, nil, nil, UnitSex("player"))) == 'Brewmaster' -- #TODO localisation
+    is_active_spec = GetSpecializationInfo(GetSpecialization(), nil, nil, nil, UnitSex("player")) == BREW_SPEC_ID  -- #TODO localisation
 end
 
 local frame, events = CreateFrame("FRAME", "SimpleBrewSimFrame"), {};
@@ -92,7 +94,6 @@ function events:PLAYER_LOGIN(...)
     GameTooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
     check_spec()
     if is_active_spec then
-        --- SimpleBrewSim:cache_traits() #TODO Might need to re-enable later, avoid for now since artifact gets added on login
         SimpleBrewSim:cache_base_stats()
         SimpleBrewSim:cache_equipped_ratings()
     end

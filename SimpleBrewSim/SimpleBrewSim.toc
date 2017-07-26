@@ -1,10 +1,10 @@
 ## Interface: 70200
 ## Title: SimpleBrewSim
-## Author: Original Retard
+## Author: Dup
 ## Version: 0.1
 ## Dependencies: LibArtifactData-1.0
 settings.lua
 utils.lua
-rotations.lua
-logic.lua
+haste_logic.lua
+core.lua
 main.lua
