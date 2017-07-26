@@ -4,7 +4,7 @@ Compares your equipped and new item in order to find your estimated DPS increase
 
 - Similar results to 100k iteration SimulationCraft sims. Average difference of 0.03%-0.08% at worst.
 - Rotation
-    - Currently has support for the 3TP BoC rotation only. [Check the **BoC dps rotation** section for more info.](http://www.peakofserenity.com/brewmasters-in-7-2-5-changes-and-tomb-of-sargeras/)
+    - Currently has support for the 3TP BoC rotation only. Check the [BoC dps rotation](http://www.peakofserenity.com/brewmasters-in-7-2-5-changes-and-tomb-of-sargeras/) section for more info.
     - Can be used with 2tp or ED/HT, but haste will be under- or overvalued.
 - Enchants & Consumables
     - When comparing items with enchants on them (cloak/rings) the calculation will assume the new item to have the same enchant.
