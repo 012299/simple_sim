@@ -23,3 +23,5 @@ Compares your equipped and new item in order to find your estimated DPS increase
     - Hidden satyr neck enchant support when calculating dps differences.
 - Relics
     - Gifted Student support.
+- Gems
+    - Gem support for non-English clients.
