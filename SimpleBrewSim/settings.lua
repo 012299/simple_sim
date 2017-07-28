@@ -13,7 +13,6 @@ SimpleBrewSim['Versatile Maelstrom Sapphire'] = {'vers', 150}
 SimpleBrewSim['Deadly Eye of Prophecy'] = {'crit', 150}
 SimpleBrewSim['Quick Dawnlight'] = {'haste',150}
 SimpleBrewSim['Masterful Shadowruby'] = {'mastery', 150}
----
 --- TABLES
 SimpleBrewSim.CACHED_TRAITS = {}
 --- RATING VALUES values #TODO change to support multiplication
