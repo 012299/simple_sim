@@ -2,6 +2,7 @@ local name, SimpleBrewSim = ...;
 local lineAdded = false
 local is_active_spec = false
 local BREW_SPEC_ID = 268
+local MONK_CLASS_ID = 10
 --- Reduce table lookup
 local INV_TYPES = SimpleBrewSim.INV_TYPES
 local LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_ARMOR
@@ -19,7 +20,7 @@ local dps_loss_text = 'loss: '
 
 local function calculate_dps_change(tooltip, new_item_link, equipped_id)
     local equipped_item_link = GetInventoryItemLink("player", equipped_id)
-    if not equipped_item_link or equipped_item_link == new_item_link  then return end
+    if not equipped_item_link or equipped_item_link == new_item_link then return end
     local item_name = GetItemInfo(equipped_item_link)
     local dps_change = dps_loss_text
     local r, g, b, r2, g2, b2 = red_loss, green_loss, blue_loss, red_gain, green_gain, blue_gain
@@ -68,7 +69,7 @@ local function OnTooltipCleared(tooltip, ...)
 end
 
 local function check_spec()
-    is_active_spec = GetSpecializationInfo(GetSpecialization(), nil, nil, nil, UnitSex("player")) == BREW_SPEC_ID  -- #TODO localisation
+    is_active_spec = GetSpecializationInfo(GetSpecialization(), nil, nil, nil, UnitSex("player")) == BREW_SPEC_ID -- #TODO localisation
 end
 
 local frame, events = CreateFrame("FRAME", "SimpleBrewSimFrame"), {};
@@ -89,6 +90,10 @@ function events:PLAYER_EQUIPMENT_CHANGED(...)
 end
 
 function events:PLAYER_LOGIN(...)
+    local _, _, class_id = UnitClass("player")
+    if class_id ~= MONK_CLASS_ID then
+        return
+    end
     GameTooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
     GameTooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
     ItemRefTooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
