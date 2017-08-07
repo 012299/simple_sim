@@ -14,7 +14,8 @@ Brewmaster only.
     - Only the stats on a trinket are considered. Any item upgrade percentages when wearing a trinket with an effect *may* differ from SimulationCraft.
 
 **Planned features**
-
+- Racial
+    - Support for passive racial's (panda double food, BE crit etc)
 - Rotation
     - Proper 2TP support.
 - Item bonuses support
