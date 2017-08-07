@@ -107,6 +107,13 @@ function events:PLAYER_LOGIN(...)
         SimpleBrewSim:cache_equipped_ratings()
     end
 end
+-- Add one time UNIT_AURA event listener to deal with active consumables on login
+function events:UNIT_AURA(...)
+    if is_active_spec then
+        SimpleBrewSim:cache_equipped_ratings()
+    end
+    frame:UnregisterEvent("UNIT_AURA")
+end
 
 frame:SetScript("OnEvent", function(self, event, ...)
     events[event](self, ...);
