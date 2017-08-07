@@ -46,27 +46,27 @@ SimpleBrewSim.ARMOUR_TYPES = { ['INVTYPE_CLOAK'] = true, [LE_ITEM_ARMOR_GENERIC]
 --- BUFFS
 SimpleBrewSim.consumables_filter = {
     --- agi buffs
-    [188033] = { ['agi'] = 1300 }, -- seventh demon
-    [242551] = { ['agi'] = 500 }, -- legionfall
-    [224001] = { ['agi'] = 325 }, -- defiled rune
-    [201639] = { ['agi'] = 500 }, -- big boy feast
-    [201635] = { ['agi'] = 400 }, -- whiny baby feast
+    [188033] = { 'agi' , 1300 }, -- seventh demon
+    [242551] = { 'agi' , 500 }, -- legionfall
+    [224001] = { 'agi' , 325 }, -- defiled rune
+    [201639] = { 'agi' , 500 }, -- big boy feast
+    [201635] = { 'agi' , 400 }, -- whiny baby feast
     --- haste buffs
-    [201330] = { ['haste'] = 225 },
-    [225598] = { ['haste'] = 300 },
-    [225603] = { ['haste'] = 375 },
+    [201330] = { 'haste' , 225 },
+    [225598] = { 'haste' , 300 },
+    [225603] = { 'haste' , 375 },
     --- vers buffs
-    [201334] = { ['vers'] = 225 },
-    [225600] = { ['vers'] = 300 },
-    [225605] = { ['vers'] = 375 },
+    [201334] = { 'vers' , 225 },
+    [225600] = { 'vers' , 300 },
+    [225605] = { 'vers' , 375 },
     --- mastery buffs
-    [201332] = { ['mastery'] = 225 },
-    [225599] = { ['mastery'] = 300 },
-    [225604] = { ['mastery'] = 375 },
+    [201332] = { 'mastery' , 225 },
+    [225599] = { 'mastery' , 300 },
+    [225604] = { 'mastery' , 375 },
     --- crit buffs
-    [201223] = { ['crit'] = 225 },
-    [225597] = { ['crit'] = 300 },
-    [225602] = { ['crit'] = 375 },
+    [201223] = { 'crit' , 225 },
+    [225597] = { 'crit' , 300 },
+    [225602] = { 'crit' , 375 },
 }
 SimpleBrewSim.consumables = { flask = { 'agi', 1300 }, food_buff = { 'agi', 500 }, rune = { 'agi', 325 } }
 

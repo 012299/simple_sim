@@ -3,10 +3,8 @@ local name, SimpleBrewSim = ...;
 local LAD = LibStub("LibArtifactData-1.0")
 local brew_weapon_ID = 128938
 local consumables_filter = SimpleBrewSim.consumables_filter
+local UnitBuff = UnitBuff
 
---- BUFFS
-local buff_filter = "CANCELABLE|PLAYER"
-local UnitAura = UnitAura
 
 function SimpleBrewSim:create_set(list)
     local set = {}
@@ -26,28 +24,27 @@ function SimpleBrewSim:ARTIFACT_ADDED(event, artifactID)
 end
 
 function SimpleBrewSim:get_consumable_buffs(ret_table)
-    --calling method expects 'stat'=value
-
     local buff_index = 1
     while buff_index do
         local buff = select(11, UnitBuff('player', buff_index))
         if not buff then
             buff_index = nil
         else
-        local buff_stat, buff_value = unpack(consumables_filter[buff])
-        if buff_stat then
-            -- work around for agi flask+feast etc, and dict keys
-            local stat_exists = ret_table[buff_stat]
-            if stat_exists then
-                ret_table = stat_exists + buff_value
-            else
-                ret_table[buff_stat] = buff_value
+            local active_buff = consumables_filter[buff]
+            if active_buff then
+                local buff_stat, buff_value = unpack(active_buff)
+                -- workaround for agi flask+feast etc, and dict keys
+                local stat_exists = ret_table[buff_stat]
+                if stat_exists then
+                    ret_table[buff_stat] = stat_exists + buff_value
+                else
+                    ret_table[buff_stat] = buff_value
+                end
             end
+            buff_index = buff_index + 1
         end
-        buff_index = buff_index +1
     end
 end
-
 
 function SimpleBrewSim:get_traits(spellIDs)
     local _, traits = LAD:GetArtifactTraits(brew_weapon_ID)
