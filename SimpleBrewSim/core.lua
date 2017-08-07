@@ -48,7 +48,7 @@ local function cache_equipped_ratings_buffs()
 end
 
 -- Gets calculated whenever gear changes
-SimpleBrewSim.cache_equipped_ratings = cache_equipped_ratings_buffs
+SimpleBrewSim.cache_equipped_ratings = cache_equipped_ratings--_buffs
 
 local function calculate_gear_delta(equipped_item, new_item)
     wipe(stat_delta)

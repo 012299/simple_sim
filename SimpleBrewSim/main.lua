@@ -91,6 +91,8 @@ end
 function events:PLAYER_LOGIN(...)
     GameTooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
     GameTooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
+    ItemRefTooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
+    ItemRefTooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
     check_spec()
     if is_active_spec then
         SimpleBrewSim:cache_base_stats()
