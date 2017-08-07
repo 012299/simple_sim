@@ -3,11 +3,14 @@ local lineAdded = false
 local is_active_spec = false
 local BREW_SPEC_ID = 268
 local MONK_CLASS_ID = 10
+-- Upvalues
+local GetInventoryItemLink = GetInventoryItemLink
+local GetItemInfo = GetItemInfo
 --- Reduce table lookup
 local INV_TYPES = SimpleBrewSim.INV_TYPES
 local LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_ARMOR
 local ARMOUR_TYPES = SimpleBrewSim.ARMOUR_TYPES
---- TOOLTIP COLOURS
+-- TOOLTIP COLOURS
 local red_loss = 0.760784314
 local green_loss = 0.482352941
 local blue_loss = 0.62745098
@@ -69,7 +72,7 @@ local function OnTooltipCleared(tooltip, ...)
 end
 
 local function check_spec()
-    is_active_spec = GetSpecializationInfo(GetSpecialization(), nil, nil, nil, UnitSex("player")) == BREW_SPEC_ID -- #TODO localisation
+    is_active_spec = GetSpecializationInfo(GetSpecialization(), nil, nil, nil, UnitSex("player")) == BREW_SPEC_ID
 end
 
 local frame, events = CreateFrame("FRAME", "SimpleBrewSimFrame"), {};

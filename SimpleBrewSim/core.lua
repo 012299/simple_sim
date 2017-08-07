@@ -17,10 +17,12 @@ local MASTERY = 1 / SimpleBrewSim.MASTERY
 local CRIT = 1 / SimpleBrewSim.CRIT
 local VERS = 1 / SimpleBrewSim.VERS
 local HASTE = 1 / SimpleBrewSim.HASTE
+--- Upvalues
 local CR_MASTERY = CR_MASTERY
 local CR_CRIT_MELEE = CR_CRIT_MELEE
 local CR_HASTE_MELEE = CR_HASTE_MELEE
 local CR_VERSATILITY_DAMAGE_DONE = CR_VERSATILITY_DAMAGE_DONE
+local GetItemStatDelta = GetItemStatDelta
 
 
 --[[

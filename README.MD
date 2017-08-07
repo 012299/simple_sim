@@ -9,13 +9,13 @@ Brewmaster only.
     - Can be used with 2tp or ED/HT, but haste will be under- or overvalued.
 - Enchants & Consumables
     - When comparing items with enchants on them (cloak/rings) the calculation will assume the new item to have the same enchant.
-    - If a foodbuff or flask is active, the stats will be used when determining upgrades. *(May require an item to be re-equipped to update)*
+    - Now uses an agility flask/food/rune to match SimulationCraft.
 - Basic trinket support
     - Only the stats on a trinket are considered. Any item upgrade percentages when wearing a trinket with an effect *may* differ from SimulationCraft.
 
 **Planned features**
 - Racial
-    - Support for passive racial's (panda double food, BE crit etc)
+    - Support for Panda panda double food racial, Dwarf and Tauren crit_damage.
 - Rotation
     - Proper 2TP support.
 - Item bonuses support
