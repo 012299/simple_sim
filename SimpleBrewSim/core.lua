@@ -41,14 +41,14 @@ local function cache_equipped_ratings_buffs()
     end
     wipe(consumable_tbl)
     -- Apply raidbuffs à la simc.
-    for stat, value in pairs(SimpleBrewSim.consumables) do
+    for _, v in pairs(SimpleBrewSim.consumables) do
+        local stat, value = unpack(v)
         equipped_ratings[stat] = equipped_ratings[stat] + value
     end
-
 end
 
 -- Gets calculated whenever gear changes
-SimpleBrewSim.cache_equipped_ratings = cache_equipped_ratings--_buffs
+SimpleBrewSim.cache_equipped_ratings = cache_equipped_ratings --_buffs
 
 local function calculate_gear_delta(equipped_item, new_item)
     wipe(stat_delta)
