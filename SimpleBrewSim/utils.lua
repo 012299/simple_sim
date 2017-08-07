@@ -1,6 +1,12 @@
 local name, SimpleBrewSim = ...;
+---ARTIFACT
 local LAD = LibStub("LibArtifactData-1.0")
 local brew_ID = 128938
+
+---BUFFS
+local buff_filter = "CANCELABLE|PLAYER"
+local UnitAura = UnitAura
+
 function SimpleBrewSim:create_set(list)
     local set = {}
     for _, l in ipairs(list) do set[l] = true end
@@ -17,6 +23,11 @@ function SimpleBrewSim:ARTIFACT_ADDED(event, artifactID)
     end
     SimpleBrewSim:cache_traits()
 end
+
+function SimpleBrewSim:get_consumable_buffs(ret_table)
+    wipe(consumable_tbl)
+end
+
 
 function SimpleBrewSim:get_traits(spellIDs)
     local _, traits = LAD:GetArtifactTraits(brew_ID)

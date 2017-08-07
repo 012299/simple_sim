@@ -11,11 +11,44 @@ local equipped_ratings = {}
 local crit_adjust = 0
 local stat_delta = {}
 local new_stats = {}
+local consumable_tbl = {}
 local relic_list = SimpleBrewSim:create_set({ SimpleBrewSim.CONCORDANCE_ID, SimpleBrewSim.FACE_PALM_ID, SimpleBrewSim.OBSIDIAN_FIST_ID })
 local MASTERY = 1 / SimpleBrewSim.MASTERY
 local CRIT = 1 / SimpleBrewSim.CRIT
 local VERS = 1 / SimpleBrewSim.VERS
 local HASTE = 1 / SimpleBrewSim.HASTE
+
+
+--[[
+Function to cache equipped ratings, one with food buffs, and one without food buffs.
+Reduces the amount of cpu usage if food/flask buffs are disabled(no unecessary if checks)
+]] --
+local function cache_equipped_ratings()
+    equipped_ratings.agi = UnitStat("player", 2) -- support for flasks etc
+    equipped_ratings.mastery = GetCombatRating(CR_MASTERY)
+    equipped_ratings.crit = GetCombatRating(CR_CRIT_MELEE)
+    equipped_ratings.haste = GetCombatRating(CR_HASTE_MELEE)
+    equipped_ratings.vers = GetCombatRating(CR_VERSATILITY_DAMAGE_DONE)
+end
+
+--for the time being, flask includes runes
+local function cache_equipped_ratings_buffs()
+    cache_equipped_ratings()
+    SimpleBrewSim:get_consumable_buffs(consumable_tbl)
+    -- Ignore any active consumable buffs
+    for stat, value in pairs(consumable_tbl) do
+        equipped_ratings[stat] = equipped_ratings[stat] - value
+    end
+    wipe(consumable_tbl)
+    -- Apply raidbuffs à la simc.
+    for stat, value in pairs(SimpleBrewSim.consumables) do
+        equipped_ratings[stat] = equipped_ratings[stat] + value
+    end
+
+end
+
+-- Gets calculated whenever gear changes
+SimpleBrewSim.cache_equipped_ratings = cache_equipped_ratings_buffs
 
 local function calculate_gear_delta(equipped_item, new_item)
     wipe(stat_delta)
@@ -68,15 +101,6 @@ function SimpleBrewSim:cache_traits()
     calculate_conc_vers()
 end
 
--- Gets calculated whenever gear changes
--- TODO: consider buffs (and ignore them)
-function SimpleBrewSim:cache_equipped_ratings()
-    equipped_ratings.agi = UnitStat("player", 2) -- support for flasks etc
-    equipped_ratings.mastery = GetCombatRating(CR_MASTERY)
-    equipped_ratings.crit = GetCombatRating(CR_CRIT_MELEE)
-    equipped_ratings.haste = GetCombatRating(CR_HASTE_MELEE)
-    equipped_ratings.vers = GetCombatRating(CR_VERSATILITY_DAMAGE_DONE)
-end
 
 --- Gets called whenever traits update
 

@@ -43,6 +43,9 @@ SimpleBrewSim.GIFTED_STUDENT_ID = 213136
 ---ARMOUR IDS
 SimpleBrewSim.ARMOUR_TYPES = {['INVTYPE_CLOAK'] = true, [LE_ITEM_ARMOR_GENERIC]=true, [LE_ITEM_ARMOR_LEATHER]=true }
 
+---BUFFS
+SimpleBrewSim.flask_id = 188033 -- seventh demon
+
 --Armorslot constants because blizz is dumb
 -- Maps between INVTYPEs and slot IDs
 SimpleBrewSim.INV_TYPES = {
