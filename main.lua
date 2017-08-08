@@ -41,7 +41,7 @@ local function show_dps_change(tooltip)
     if not new_item_link then
         return
     end
-    local equip_slot, _, _, item_class, item_subclass = select(9, GetItemInfo(new_item_link))
+    local _,_,_,_,_,_,_,_, equip_slot, _, _, item_class, item_subclass = GetItemInfo(new_item_link)
     if item_class ~= LE_ITEM_CLASS_ARMOR then
         return
     end
