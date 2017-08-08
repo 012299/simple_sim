@@ -1,0 +1,13 @@
+package-as: SimpleBrewSim
+move-folders:
+  SimpleBrewSim/SimpleBrewSim/*: SimpleBrewSim
+
+ignore:
+  *.MD
+  *.png
+
+required-dependencies:
+  - LibArtifactData-1.0
+
+manual-changelog:
+  filename: changelog.txt
