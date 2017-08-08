@@ -1,8 +1,9 @@
 package-as: SimpleBrewSim
 
 ignore:
-  *.MD
-  *.png
+  - README.MD
+  - changelog.txt
+  - proj
 
 required-dependencies:
   - LibArtifactData-1.0
