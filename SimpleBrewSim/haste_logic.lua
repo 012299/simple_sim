@@ -11,6 +11,8 @@ local KS_COST = SimpleBrewSim.KS_COST
 local TP_COST = SimpleBrewSim.TP_COST
 local RELEVANT_FIGHT_LENGTH = SimpleBrewSim.RELEVANT_FIGHT_LENGTH
 local FACE_PALM_ID = SimpleBrewSim.FACE_PALM_ID
+--Upvalues
+local UnitPowerMax = UnitPowerMax
 
 -- TODO #arcway necklace support etc
 local function calculate_downtime(haste, energy_out, duration, bob_cd)

@@ -2,11 +2,15 @@ local name, SimpleBrewSim = ...;
 local lineAdded = false
 local is_active_spec = false
 local BREW_SPEC_ID = 268
+local MONK_CLASS_ID = 10
+-- Upvalues
+local GetInventoryItemLink = GetInventoryItemLink
+local GetItemInfo = GetItemInfo
 --- Reduce table lookup
 local INV_TYPES = SimpleBrewSim.INV_TYPES
 local LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_ARMOR
 local ARMOUR_TYPES = SimpleBrewSim.ARMOUR_TYPES
---- TOOLTIP COLOURS
+-- TOOLTIP COLOURS
 local red_loss = 0.760784314
 local green_loss = 0.482352941
 local blue_loss = 0.62745098
@@ -19,12 +23,11 @@ local dps_loss_text = 'loss: '
 
 local function calculate_dps_change(tooltip, new_item_link, equipped_id)
     local equipped_item_link = GetInventoryItemLink("player", equipped_id)
-    if not equipped_item_link or equipped_item_link == new_item_link  then return end
+    if not equipped_item_link or equipped_item_link == new_item_link then return end
     local item_name = GetItemInfo(equipped_item_link)
     local dps_change = dps_loss_text
     local r, g, b, r2, g2, b2 = red_loss, green_loss, blue_loss, red_gain, green_gain, blue_gain
     -- round number workaround
-    --attempt to compare string with number
     local dps_value = SimpleBrewSim:compare_items(equipped_item_link, new_item_link) -- string to number
     local dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 3), 2)
     if dps_value > 0 then
@@ -69,7 +72,7 @@ local function OnTooltipCleared(tooltip, ...)
 end
 
 local function check_spec()
-    is_active_spec = GetSpecializationInfo(GetSpecialization(), nil, nil, nil, UnitSex("player")) == BREW_SPEC_ID  -- #TODO localisation
+    is_active_spec = GetSpecializationInfo(GetSpecialization(), nil, nil, nil, UnitSex("player")) == BREW_SPEC_ID
 end
 
 local frame, events = CreateFrame("FRAME", "SimpleBrewSimFrame"), {};
@@ -90,13 +93,26 @@ function events:PLAYER_EQUIPMENT_CHANGED(...)
 end
 
 function events:PLAYER_LOGIN(...)
+    local _, _, class_id = UnitClass("player")
+    if class_id ~= MONK_CLASS_ID then
+        return
+    end
     GameTooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
     GameTooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
+    ItemRefTooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
+    ItemRefTooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
     check_spec()
     if is_active_spec then
         SimpleBrewSim:cache_base_stats()
         SimpleBrewSim:cache_equipped_ratings()
     end
+end
+-- Add one time UNIT_AURA event listener to deal with active consumables on login
+function events:UNIT_AURA(...)
+    if is_active_spec then
+        SimpleBrewSim:cache_equipped_ratings()
+    end
+    frame:UnregisterEvent("UNIT_AURA")
 end
 
 frame:SetScript("OnEvent", function(self, event, ...)

@@ -1,4 +1,5 @@
 Compares your equipped and new item in order to find your estimated DPS increase or decrease. Calculations are done based on a 5minute fight with bloodlust usage.
+Brewmaster only.
 
 **Features**
 
@@ -8,12 +9,15 @@ Compares your equipped and new item in order to find your estimated DPS increase
     - Can be used with 2tp or ED/HT, but haste will be under- or overvalued.
 - Enchants & Consumables
     - When comparing items with enchants on them (cloak/rings) the calculation will assume the new item to have the same enchant.
-    -If a foodbuff or flask is active, the stats will be used when determining upgrades. **May require an item to be re-equipped to update**
+    - Now uses an agility flask/food/rune to match SimulationCraft.
 - Basic trinket support
     - Only the stats on a trinket are considered. Any item upgrade percentages when wearing a trinket with an effect *may* differ from SimulationCraft.
 
 **Planned features**
-
+- Racial
+    - Support for Panda panda double food racial, Dwarf and Tauren crit_damage.
+- Rotation
+    - Proper 2TP support.
 - Item bonuses support
     - Legendaries' effect on dps.
     - Item set bonuses that increase dps, e.g. Jacin's Ruse.
