@@ -17,23 +17,32 @@ local blue_loss = 0.62745098
 local red_gain = 0
 local green_gain = 1
 local blue_gain = 0.501960784
-local dps_gain_text = 'gain: '
-local dps_loss_text = 'loss: '
+local DPS_GAIN_TEXT = 'gain: '
+local DPS_LOSS_TEXT = 'loss: '
+-- Caching to avoid unnecessary calculations when tooltip show/hide gets called multiple times
+local last_item_link, item_name, dps_change, dps_str_value, r, g, b, r2, g2, b2
+local item_name2, dps_change2, dps_str_value2, r_2, g_2, b_2, r2_2, g2_2, b2_2
 
+local function add_tooltip_line(tooltip)
+    if item_name2 then
+        tooltip:AddDoubleLine("DPS " .. dps_change2 .. dps_str_value2 .. "% ", "(" .. item_name2 .. ")", r_2, g_2, b_2, r2_2, g2_2, b2_2) --#TODO look into string concat
+    end
+    tooltip:AddDoubleLine("DPS " .. dps_change .. dps_str_value .. "% ", "(" .. item_name .. ")", r, g, b, r2, g2, b2) --#TODO look into string concat
+end
 
 local function calculate_dps_change(tooltip, new_item_link, equipped_id)
     local equipped_item_link = GetInventoryItemLink("player", equipped_id)
     if not equipped_item_link or equipped_item_link == new_item_link then return end
-    local item_name = GetItemInfo(equipped_item_link)
-    local dps_change = dps_loss_text
-    local r, g, b, r2, g2, b2 = red_loss, green_loss, blue_loss, red_gain, green_gain, blue_gain
+    item_name = GetItemInfo(equipped_item_link)
     -- round number workaround
     local dps_value = SimpleBrewSim:compare_items(equipped_item_link, new_item_link) -- string to number
-    local dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 3), 2)
+    dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 3), 2)
     if dps_value > 0 then
-        dps_change, r, g, b, r2, g2, b2 = dps_gain_text, red_gain, green_gain, blue_gain, red_loss, green_loss, blue_loss
+        dps_change, r, g, b, r2, g2, b2 = DPS_GAIN_TEXT, red_gain, green_gain, blue_gain, red_loss, green_loss, blue_loss
+    else
+        dps_change, r, g, b, r2, g2, b2 = DPS_LOSS_TEXT, red_loss, green_loss, blue_loss, red_gain, green_gain, blue_gain
     end
-    tooltip:AddDoubleLine("DPS " .. dps_change .. dps_str_value .. "% ", "(" .. item_name .. ")", r, g, b, r2, g2, b2) --#TODO look into string concat
+    add_tooltip_line(tooltip)
 end
 
 local function show_dps_change(tooltip)
@@ -41,7 +50,13 @@ local function show_dps_change(tooltip)
     if not new_item_link then
         return
     end
-    local _,_,_,_,_,_,_,_, equip_slot, _, _, item_class, item_subclass = GetItemInfo(new_item_link)
+    if new_item_link == last_item_link then
+        add_tooltip_line(tooltip)
+        return
+    end
+    last_item_link = new_item_link
+    item_name2 = nil
+    local _, _, _, _, _, _, _, _, equip_slot, _, _, item_class, item_subclass = GetItemInfo(new_item_link)
     if item_class ~= LE_ITEM_CLASS_ARMOR then
         return
     end
@@ -54,6 +69,7 @@ local function show_dps_change(tooltip)
 
     if equipped_id == INV_TYPES['INVTYPE_TRINKET'] or equipped_id == INV_TYPES['INVTYPE_FINGER'] then
         equipped_id = equipped_id + 1
+        item_name2, dps_change2, dps_str_value2, r_2, g_2, b_2, r2_2, g2_2, b2_2 = item_name, dps_change, dps_str_value, r, g, b, r2, g2, b2
         calculate_dps_change(tooltip, new_item_link, equipped_id)
     end
 end
@@ -89,6 +105,7 @@ function events:PLAYER_EQUIPMENT_CHANGED(...)
     if not is_active_spec then
         return
     end
+    last_item_link, item_name2 = nil, nil
     SimpleBrewSim:cache_equipped_ratings()
 end
 
@@ -107,6 +124,7 @@ function events:PLAYER_LOGIN(...)
         SimpleBrewSim:cache_equipped_ratings()
     end
 end
+
 -- Add one time UNIT_AURA event listener to deal with active consumables on login
 function events:UNIT_AURA(...)
     if is_active_spec then
