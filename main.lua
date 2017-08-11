@@ -20,27 +20,28 @@ local blue_gain = 0.501960784
 local DPS_GAIN_TEXT = 'gain: '
 local DPS_LOSS_TEXT = 'loss: '
 -- Caching to avoid unnecessary calculations when tooltip show/hide gets called multiple times
-local last_item_link, item_name, dps_change, dps_str_value, r, g, b, r2, g2, b2
-local item_name2, dps_change2, dps_str_value2, r_2, g_2, b_2, r2_2, g2_2, b2_2
+local last_item_link, line_left, line_right, r, g, b, r2, g2, b2
+local line_left_2, line_right_2, r_2, g_2, b_2, r2_2, g2_2, b2_2
 
 local function add_tooltip_line(tooltip)
-    if item_name2 then
-        tooltip:AddDoubleLine("DPS " .. dps_change2 .. dps_str_value2 .. "% ", "(" .. item_name2 .. ")", r_2, g_2, b_2, r2_2, g2_2, b2_2) --#TODO look into string concat
+    if line_left_2 then
+        tooltip:AddDoubleLine(line_left_2, line_right_2, r_2, g_2, b_2, r2_2, g2_2, b2_2) --#TODO look into string concat
     end
-    tooltip:AddDoubleLine("DPS " .. dps_change .. dps_str_value .. "% ", "(" .. item_name .. ")", r, g, b, r2, g2, b2) --#TODO look into string concat
+    tooltip:AddDoubleLine(line_left, line_right, r, g, b, r2, g2, b2) --#TODO look into string concat
 end
 
 local function calculate_dps_change(tooltip, new_item_link, equipped_id)
     local equipped_item_link = GetInventoryItemLink("player", equipped_id)
     if not equipped_item_link or equipped_item_link == new_item_link then return end
-    item_name = GetItemInfo(equipped_item_link)
+    local item_name = GetItemInfo(equipped_item_link)
     -- round number workaround
     local dps_value = SimpleBrewSim:compare_items(equipped_item_link, new_item_link) -- string to number
-    dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 3), 2)
+    local dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 3), 2)
     if dps_value > 0 then
-        dps_change, r, g, b, r2, g2, b2 = DPS_GAIN_TEXT, red_gain, green_gain, blue_gain, red_loss, green_loss, blue_loss
+        line_left, line_right, r, g, b, r2, g2, b2 = "DPS " .. DPS_GAIN_TEXT .. dps_str_value .. "% ", "(" .. item_name .. ")", red_gain, green_gain, blue_gain, red_loss, green_loss, blue_loss
+
     else
-        dps_change, r, g, b, r2, g2, b2 = DPS_LOSS_TEXT, red_loss, green_loss, blue_loss, red_gain, green_gain, blue_gain
+        line_left, line_right, r, g, b, r2, g2, b2 = "DPS " .. DPS_LOSS_TEXT .. dps_str_value .. "% ", "(" .. item_name .. ")", red_loss, green_loss, blue_loss, red_gain, green_gain, blue_gain
     end
     add_tooltip_line(tooltip)
 end
@@ -54,8 +55,8 @@ local function show_dps_change(tooltip)
         add_tooltip_line(tooltip)
         return
     end
-    last_item_link = new_item_link
-    item_name2 = nil
+    last_item_link = nil
+    line_left_2 = nil
     local _, _, _, _, _, _, _, _, equip_slot, _, _, item_class, item_subclass = GetItemInfo(new_item_link)
     if item_class ~= LE_ITEM_CLASS_ARMOR then
         return
@@ -63,13 +64,13 @@ local function show_dps_change(tooltip)
     if not ARMOUR_TYPES[item_subclass] and not ARMOUR_TYPES[equip_slot] then
         return
     end
-
+    last_item_link = new_item_link
     local equipped_id = INV_TYPES[equip_slot]
     calculate_dps_change(tooltip, new_item_link, equipped_id)
 
     if equipped_id == INV_TYPES['INVTYPE_TRINKET'] or equipped_id == INV_TYPES['INVTYPE_FINGER'] then
         equipped_id = equipped_id + 1
-        item_name2, dps_change2, dps_str_value2, r_2, g_2, b_2, r2_2, g2_2, b2_2 = item_name, dps_change, dps_str_value, r, g, b, r2, g2, b2
+        line_left_2, line_right_2, r_2, g_2, b_2, r2_2, g2_2, b2_2 = line_left, line_right, r, g, b, r2, g2, b2
         calculate_dps_change(tooltip, new_item_link, equipped_id)
     end
 end
@@ -95,6 +96,7 @@ local frame, events = CreateFrame("FRAME", "SimpleBrewSimFrame"), {};
 function events:PLAYER_SPECIALIZATION_CHANGED(...)
     check_spec()
     if is_active_spec then
+        last_item_link, line_left_2 = nil, nil
         SimpleBrewSim:cache_traits()
         SimpleBrewSim:cache_base_stats()
         SimpleBrewSim:cache_equipped_ratings()
@@ -105,7 +107,7 @@ function events:PLAYER_EQUIPMENT_CHANGED(...)
     if not is_active_spec then
         return
     end
-    last_item_link, item_name2 = nil, nil
+    last_item_link, line_left_2 = nil, nil
     SimpleBrewSim:cache_equipped_ratings()
 end
 
