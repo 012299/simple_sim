@@ -17,7 +17,7 @@ Brewmaster only.
 - Racial
     - Support for Panda panda double food racial, Dwarf and Tauren crit_damage.
 - Rotation
-    - Proper 2TP support and improved haste numbers.
+    - Proper 2TP support and improved haste value calculations.
 - Item bonuses support
     - Legendaries' effect on dps.
     - Item set bonuses that increase dps, e.g. Jacin's Ruse.

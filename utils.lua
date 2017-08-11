@@ -26,23 +26,22 @@ end
 function SimpleBrewSim:get_consumable_buffs(ret_table)
     local buff_index = 1
     while buff_index do
-        local buff = select(11, UnitBuff('player', buff_index))
+        local _, _, _, _, _, _, _, _, _, _, buff = UnitBuff('player', buff_index)
         if not buff then
-            buff_index = nil
-        else
-            local active_buff = consumables_filter[buff]
-            if active_buff then
-                local buff_stat, buff_value = unpack(active_buff)
-                -- workaround for agi flask+feast etc, and dict keys
-                local stat_exists = ret_table[buff_stat]
-                if stat_exists then
-                    ret_table[buff_stat] = stat_exists + buff_value
-                else
-                    ret_table[buff_stat] = buff_value
-                end
-            end
-            buff_index = buff_index + 1
+            break
         end
+        local active_buff = consumables_filter[buff]
+        if active_buff then
+            local buff_stat, buff_value = unpack(active_buff)
+            -- workaround for agi flask+feast etc, and dict keys
+            local stat_exists = ret_table[buff_stat]
+            if stat_exists then
+                ret_table[buff_stat] = stat_exists + buff_value
+            else
+                ret_table[buff_stat] = buff_value
+            end
+        end
+        buff_index = buff_index + 1
     end
 end
 
