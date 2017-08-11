@@ -24,10 +24,11 @@ local last_item_link, line_left, line_right, r, g, b, r2, g2, b2
 local line_left_2, line_right_2, r_2, g_2, b_2, r2_2, g2_2, b2_2
 
 local function add_tooltip_line(tooltip)
+    -- for ring/trinket caching
     if line_left_2 then
-        tooltip:AddDoubleLine(line_left_2, line_right_2, r_2, g_2, b_2, r2_2, g2_2, b2_2) --#TODO look into string concat
+        tooltip:AddDoubleLine(line_left_2, line_right_2, r_2, g_2, b_2, r2_2, g2_2, b2_2)
     end
-    tooltip:AddDoubleLine(line_left, line_right, r, g, b, r2, g2, b2) --#TODO look into string concat
+    tooltip:AddDoubleLine(line_left, line_right, r, g, b, r2, g2, b2)
 end
 
 local function calculate_dps_change(tooltip, new_item_link, equipped_id)
@@ -39,7 +40,6 @@ local function calculate_dps_change(tooltip, new_item_link, equipped_id)
     local dps_str_value = SimpleBrewSim:round(SimpleBrewSim:round(math.abs(dps_value), 3), 2)
     if dps_value > 0 then
         line_left, line_right, r, g, b, r2, g2, b2 = "DPS " .. DPS_GAIN_TEXT .. dps_str_value .. "% ", "(" .. item_name .. ")", red_gain, green_gain, blue_gain, red_loss, green_loss, blue_loss
-
     else
         line_left, line_right, r, g, b, r2, g2, b2 = "DPS " .. DPS_LOSS_TEXT .. dps_str_value .. "% ", "(" .. item_name .. ")", red_loss, green_loss, blue_loss, red_gain, green_gain, blue_gain
     end
@@ -51,10 +51,12 @@ local function show_dps_change(tooltip)
     if not new_item_link then
         return
     end
+    -- if same item (tooltip show gets called multiple times per second), use stored string. No need to recalculate gain/loss.
     if new_item_link == last_item_link then
         add_tooltip_line(tooltip)
         return
     end
+    -- new item, set last_item_link to nil to avoid strings on non-armour items.
     last_item_link = nil
     line_left_2 = nil
     local _, _, _, _, _, _, _, _, equip_slot, _, _, item_class, item_subclass = GetItemInfo(new_item_link)
@@ -70,6 +72,7 @@ local function show_dps_change(tooltip)
 
     if equipped_id == INV_TYPES['INVTYPE_TRINKET'] or equipped_id == INV_TYPES['INVTYPE_FINGER'] then
         equipped_id = equipped_id + 1
+        -- reassign cached item to new var so second comparison item can be cached
         line_left_2, line_right_2, r_2, g_2, b_2, r2_2, g2_2, b2_2 = line_left, line_right, r, g, b, r2, g2, b2
         calculate_dps_change(tooltip, new_item_link, equipped_id)
     end
@@ -96,6 +99,7 @@ local frame, events = CreateFrame("FRAME", "SimpleBrewSimFrame"), {};
 function events:PLAYER_SPECIALIZATION_CHANGED(...)
     check_spec()
     if is_active_spec then
+        -- clear tooltip cache, maybe move it to a method at some point
         last_item_link, line_left_2 = nil, nil
         SimpleBrewSim:cache_traits()
         SimpleBrewSim:cache_base_stats()
@@ -107,6 +111,7 @@ function events:PLAYER_EQUIPMENT_CHANGED(...)
     if not is_active_spec then
         return
     end
+    --clear tooltip cache
     last_item_link, line_left_2 = nil, nil
     SimpleBrewSim:cache_equipped_ratings()
 end

@@ -1,5 +1,5 @@
+11082017
 Minor CPU optimizations
-
 
 08082017
 Default behaviour now matches Simulationcraft's usage of agi flask/food/runes.
