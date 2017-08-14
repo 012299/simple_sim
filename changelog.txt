@@ -1,3 +1,6 @@
+14082017
+minor equipped items bugfix
+
 11082017
 Minor CPU optimizations
 
