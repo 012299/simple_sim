@@ -33,7 +33,11 @@ end
 
 local function calculate_dps_change(tooltip, new_item_link, equipped_id)
     local equipped_item_link = GetInventoryItemLink("player", equipped_id)
-    if not equipped_item_link or equipped_item_link == new_item_link then return end
+    if not equipped_item_link or equipped_item_link == new_item_link then
+        last_item_link = nil
+        line_left_2 = nil
+        return
+    end
     local item_name = GetItemInfo(equipped_item_link)
     -- round number workaround
     local dps_value = SimpleBrewSim:compare_items(equipped_item_link, new_item_link) -- string to number
